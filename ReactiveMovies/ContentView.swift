@@ -9,19 +9,25 @@
 import SwiftUI
 import Combine
 
+class TypedText: ObservableObject {
+    @Published var value: String = ""
+}
+
 struct ContentView: View {
-    
     var movies: [Movie]
+    
+    @ObservedObject var typedText: TypedText = TypedText()
     
     var body: some View {
         List {
             Section {
-                SeachTextField()
+                SeachTextField(typedText: $typedText.value)
             }
             Section {
-                MoviesSection(movies: movies)
+                MoviesSection(movies: movies, typedText: _typedText)
             }
         }
+        
     }
 }
 
@@ -35,8 +41,8 @@ struct MoviesSection: View {
         }
     }
     
-    init(movies: [Movie]) {
-        viewModel = MoviesSectionViewModel(movies: movies)
+    init(movies: [Movie], typedText: ObservedObject<TypedText>) {
+        viewModel = MoviesSectionViewModel(movies: movies, observedObject: typedText)
     }
 }
 
@@ -46,15 +52,20 @@ public final class MoviesSectionViewModel: ObservableObject {
     
     private var subscriptions = Set<AnyCancellable>()
     
-    var typedValue: AnyPublisher<String, Never> = CurrentValueSubject("Movie 1").eraseToAnyPublisher()
+    @ObservedObject var typedText: TypedText
     
-    init(movies: [Movie]) {
+    init(movies: [Movie], observedObject: ObservedObject<TypedText>) {
         self.movies = movies
+        self._typedText = observedObject
         
-        typedValue
+        typedText.$value
             .flatMap { typedString -> Result<[Movie], Never>.Publisher in
-                let movies = movies.filter { $0.title.contains(typedString) }
-                return movies.publisher.collect()
+                if typedString.count > 0 {
+                    let movies = movies.filter { $0.title.contains(typedString) }
+                    return movies.publisher.collect()
+                } else {
+                    return movies.publisher.collect()
+                }
             }
             .assign(to: \.movies, on: self)
             .store(in: &subscriptions)
@@ -62,9 +73,9 @@ public final class MoviesSectionViewModel: ObservableObject {
 }
 
 struct SeachTextField: View {
-    
-    @State var typedText: String = ""
-    
+
+    @Binding var typedText: String
+
     var body: some View {
         HStack(alignment: .center) {
             Image(systemName: "magnifyingglass.circle")
