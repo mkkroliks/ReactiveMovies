@@ -14,20 +14,63 @@ class TypedText: ObservableObject {
 }
 
 struct ContentView: View {
-    var movies: [Movie]
     
-    @ObservedObject var typedText: TypedText = TypedText()
+//    @ObservedObject var typedText: TypedText = TypedText()
+    
+    @ObservedObject var viewModel = MoviesSectionViewModel()
     
     var body: some View {
         List {
             Section {
-                SeachTextField(typedText: $typedText.value)
+                SeachTextField(typedText: viewModel.$typedText.value)
             }
             Section {
-                MoviesSection(movies: movies, typedText: _typedText)
+                MoviesSection(viewModel: viewModel)
             }
         }
         
+    }
+}
+
+public final class MoviesSectionViewModel: ObservableObject {
+    
+    @Published var movies: [MovieDTO] = []
+    
+    @Published private var fetchedData: [MovieDTO] = []
+    
+    @ObservedObject var typedText: TypedText = TypedText()
+    
+    private var subscriptions = Set<AnyCancellable>()
+    
+    init() {
+        
+        $movies.sink { movies in
+            print("MOVIES: \(movies)")
+        }.store(in: &subscriptions)
+        
+        MoviesDBService.shared
+            .getPopular()
+            .replaceError(with: [])
+            .sink(receiveValue: { models in
+                self.movies = models
+                self.fetchedData = models
+            })
+//            .assign(to: \.movies, on: self)
+            .store(in: &subscriptions)
+        
+        typedText.$value
+            .flatMap { typedString -> Result<[MovieDTO], Never>.Publisher in
+                if typedString.count > 0 {
+                    let movies = self.movies.filter { $0.title.contains(typedString) }
+                    return movies.publisher.collect()
+                } else {
+//                    return self.movies.publisher.collect()
+                    return self.fetchedData.publisher.collect()
+                }
+            }
+            .print()
+            .assign(to: \.movies, on: self)
+            .store(in: &subscriptions)
     }
 }
 
@@ -40,37 +83,9 @@ struct MoviesSection: View {
             MovieCell(movie: movie)
         }
     }
-    
-    init(movies: [Movie], typedText: ObservedObject<TypedText>) {
-        viewModel = MoviesSectionViewModel(movies: movies, observedObject: typedText)
-    }
 }
 
-public final class MoviesSectionViewModel: ObservableObject {
-    
-    @Published var movies: [Movie]
-    
-    private var subscriptions = Set<AnyCancellable>()
-    
-    @ObservedObject var typedText: TypedText
-    
-    init(movies: [Movie], observedObject: ObservedObject<TypedText>) {
-        self.movies = movies
-        self._typedText = observedObject
-        
-        typedText.$value
-            .flatMap { typedString -> Result<[Movie], Never>.Publisher in
-                if typedString.count > 0 {
-                    let movies = movies.filter { $0.title.contains(typedString) }
-                    return movies.publisher.collect()
-                } else {
-                    return movies.publisher.collect()
-                }
-            }
-            .assign(to: \.movies, on: self)
-            .store(in: &subscriptions)
-    }
-}
+
 
 struct SeachTextField: View {
 
@@ -86,14 +101,14 @@ struct SeachTextField: View {
 
 struct MovieCell: View {
     
-    let movie: Movie
+    let movie: MovieDTO
     
     var body: some View {
         
         HStack(alignment: .center) {
             VStack(alignment: .leading, spacing: 10) {
                 Text(movie.title)
-                Text(movie.description)
+//                Text(movie.description)
                     .font(.subheadline)
                     .foregroundColor(.gray)
                 
@@ -109,6 +124,6 @@ struct MovieCell: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView(movies: MoviesFactory.make())
+        ContentView()
     }
 }
