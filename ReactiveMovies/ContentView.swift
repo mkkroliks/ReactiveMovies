@@ -15,8 +15,6 @@ class TypedText: ObservableObject {
 
 struct ContentView: View {
     
-//    @ObservedObject var typedText: TypedText = TypedText()
-    
     @ObservedObject var viewModel = MoviesSectionViewModel()
     
     var body: some View {
@@ -36,18 +34,13 @@ public final class MoviesSectionViewModel: ObservableObject {
     
     @Published var movies: [MovieDTO] = []
     
-    @Published private var fetchedData: [MovieDTO] = []
-    
     @ObservedObject var typedText: TypedText = TypedText()
+    
+    private var fetchedData: [MovieDTO] = []
     
     private var subscriptions = Set<AnyCancellable>()
     
-    init() {
-        
-        $movies.sink { movies in
-            print("MOVIES: \(movies)")
-        }.store(in: &subscriptions)
-        
+    init() {        
         MoviesDBService.shared
             .getPopular()
             .replaceError(with: [])
@@ -55,16 +48,14 @@ public final class MoviesSectionViewModel: ObservableObject {
                 self.movies = models
                 self.fetchedData = models
             })
-//            .assign(to: \.movies, on: self)
             .store(in: &subscriptions)
         
         typedText.$value
             .flatMap { typedString -> Result<[MovieDTO], Never>.Publisher in
                 if typedString.count > 0 {
-                    let movies = self.movies.filter { $0.title.contains(typedString) }
+                    let movies = self.fetchedData.filter { $0.title.contains(typedString) }
                     return movies.publisher.collect()
                 } else {
-//                    return self.movies.publisher.collect()
                     return self.fetchedData.publisher.collect()
                 }
             }
@@ -84,8 +75,6 @@ struct MoviesSection: View {
         }
     }
 }
-
-
 
 struct SeachTextField: View {
 
@@ -119,8 +108,6 @@ struct MovieCell: View {
         }
     }
 }
-
-
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {

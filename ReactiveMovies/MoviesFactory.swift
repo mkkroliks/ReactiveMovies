@@ -9,20 +9,6 @@
 import Foundation
 
 enum MoviesFactory {
-//    static func make() -> [Movie] {
-//        [
-//            Movie(title: "Movie 1", description: "Some Common description"),
-//            Movie(title: "Movie 2", description: "Some Common description"),
-//            Movie(title: "Movie 3", description: "Some Common description"),
-//            Movie(title: "Movie 4", description: "Some Common description"),
-//            Movie(title: "Movie 5", description: "Some Common description"),
-//            Movie(title: "Movie 6", description: "Some Common description"),
-//            Movie(title: "Movie 7", description: "Some Common description"),
-//            Movie(title: "Movie 8", description: "Some Common description"),
-//            Movie(title: "Movie 9", description: "Some Common description"),
-//            Movie(title: "Movie 10", description: "Some Common description")
-//        ]
-//    }
     static func make() -> [MovieDTO] {
         [
             MovieDTO(id: 0,title: "Movie 1"),
