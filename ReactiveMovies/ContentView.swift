@@ -25,6 +25,15 @@ struct ContentView: View {
             Section {
                 MoviesSection(viewModel: viewModel)
             }
+            if viewModel.movies.isEmpty == false {
+                Rectangle()
+                    .foregroundColor(.clear)
+                    .onAppear {
+                        if !self.viewModel.movies.isEmpty, !self.viewModel.isSearching {
+                            self.viewModel.fetchNextPage()
+                        }
+                    }
+            }
         }
         
     }
@@ -40,15 +49,14 @@ public final class MoviesSectionViewModel: ObservableObject {
     
     private var subscriptions = Set<AnyCancellable>()
     
+    private var currentPage = 1
+    
+    var isSearching: Bool {
+        return typedText.value.count > 0
+    }
+    
     init() {        
-        MoviesDBService.shared
-            .getPopular()
-            .replaceError(with: [])
-            .sink(receiveValue: { models in
-                self.movies = models
-                self.fetchedData = models
-            })
-            .store(in: &subscriptions)
+        fetchMovies(page: 1)
         
         typedText.$value
             .flatMap { typedString -> Result<[MovieDTO], Never>.Publisher in
@@ -62,6 +70,28 @@ public final class MoviesSectionViewModel: ObservableObject {
             .print()
             .assign(to: \.movies, on: self)
             .store(in: &subscriptions)
+    }
+    
+    func fetchNextPage() {
+        fetchMovies(page: currentPage + 1)
+    }
+    
+    private func fetchMovies(page: Int) {
+        MoviesDBService.shared
+            .getPopular(page: page)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .finished:
+                    break
+                case .failure(let error):
+                    print(error)
+                }
+            }, receiveValue: { response in
+                self.movies += response.results
+                self.fetchedData += response.results
+                self.currentPage = response.page ?? 0
+            })
+        .store(in: &subscriptions)
     }
 }
 
@@ -97,7 +127,7 @@ struct MovieCell: View {
         HStack(alignment: .center) {
             VStack(alignment: .leading, spacing: 10) {
                 Text(movie.title)
-//                Text(movie.description)
+                Text(movie.overview)
                     .font(.subheadline)
                     .foregroundColor(.gray)
                 

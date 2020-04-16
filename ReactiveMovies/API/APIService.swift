@@ -39,7 +39,11 @@ struct APIService {
         }
     }
     
-    func get<DTO: Codable>(endpoint: Endpoint, completion: @escaping (Result<DTO, APIError>) -> Void) {
+    func get<DTO: Codable>(
+        endpoint: Endpoint,
+        params: [String: String]?,
+        completion: @escaping (Result<DTO, APIError>) -> Void
+    ) {
         let queryURL = baseURL.appendingPathComponent(endpoint.path)
         guard var urlComponents = URLComponents(url: queryURL, resolvingAgainstBaseURL: true) else {
             completion(Result.failure(APIError.urlComponentsCreation))
@@ -48,12 +52,20 @@ struct APIService {
         urlComponents.queryItems = [
             URLQueryItem(name: "api_key", value: key)
         ]
+        if let params = params {
+            for (_, value) in params.enumerated() {
+                urlComponents.queryItems?.append(URLQueryItem(name: value.key, value: value.value))
+            }
+        }
         guard let url = urlComponents.url else {
             completion(Result.failure(APIError.urlComponentURLCreation))
             return
         }
         
         let request = URLRequest(url: url)
+        #if DEBUG
+        print("Request: \(request)")
+        #endif
         let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
             guard let data = data else {
                 DispatchQueue.main.async {
@@ -74,6 +86,9 @@ struct APIService {
                 }
             } catch let error {
                 DispatchQueue.main.async {
+                    #if DEBUG
+                    print("JSON Decoding Error: \(error)")
+                    #endif
                     completion(.failure(.jsonDecoding(error: error)))
                 }
             }

@@ -16,7 +16,6 @@
 		9F16A1B6243E512000A75CF4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9F16A1B4243E512000A75CF4 /* LaunchScreen.storyboard */; };
 		9F16A1C1243E512000A75CF4 /* ReactiveMoviesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F16A1C0243E512000A75CF4 /* ReactiveMoviesTests.swift */; };
 		9F16A1CC243E512000A75CF4 /* ReactiveMoviesUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F16A1CB243E512000A75CF4 /* ReactiveMoviesUITests.swift */; };
-		9F16A1DB243E51DB00A75CF4 /* Movie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F16A1DA243E51DB00A75CF4 /* Movie.swift */; };
 		9F16A1DD243E846200A75CF4 /* MoviesFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F16A1DC243E846200A75CF4 /* MoviesFactory.swift */; };
 		9FC80DE4243FC3BD00DF25EB /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FC80DE3243FC3BD00DF25EB /* APIService.swift */; };
 		9FC80DE6243FCD8900DF25EB /* MoviesDBService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FC80DE5243FCD8900DF25EB /* MoviesDBService.swift */; };
@@ -55,7 +54,6 @@
 		9F16A1C7243E512000A75CF4 /* ReactiveMoviesUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ReactiveMoviesUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9F16A1CB243E512000A75CF4 /* ReactiveMoviesUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactiveMoviesUITests.swift; sourceTree = "<group>"; };
 		9F16A1CD243E512000A75CF4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		9F16A1DA243E51DB00A75CF4 /* Movie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Movie.swift; sourceTree = "<group>"; };
 		9F16A1DC243E846200A75CF4 /* MoviesFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesFactory.swift; sourceTree = "<group>"; };
 		9FC80DE3243FC3BD00DF25EB /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
 		9FC80DE5243FCD8900DF25EB /* MoviesDBService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesDBService.swift; sourceTree = "<group>"; };
@@ -153,7 +151,6 @@
 		9F16A1D9243E51D000A75CF4 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				9F16A1DA243E51DB00A75CF4 /* Movie.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -304,7 +301,6 @@
 				9F16A1AC243E511E00A75CF4 /* ReactiveMovies.xcdatamodeld in Sources */,
 				9F16A1AE243E511E00A75CF4 /* ContentView.swift in Sources */,
 				9F16A1A9243E511E00A75CF4 /* SceneDelegate.swift in Sources */,
-				9F16A1DB243E51DB00A75CF4 /* Movie.swift in Sources */,
 				9F16A1DD243E846200A75CF4 /* MoviesFactory.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
