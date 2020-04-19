@@ -13,35 +13,38 @@ class TypedText: ObservableObject {
     @Published var value: String = ""
 }
 
-struct ContentView: View {
+struct PopularMovies: View {
     
     @ObservedObject var viewModel = MoviesSectionViewModel()
     
     var body: some View {
-        List {
-            Section {
-                SeachTextField(typedText: viewModel.$typedText.value)
-            }
-            Section {
-                MoviesSection(viewModel: viewModel)
-            }
-            if viewModel.movies.isEmpty == false {
-                Rectangle()
-                    .foregroundColor(.clear)
-                    .onAppear {
-                        if !self.viewModel.movies.isEmpty, !self.viewModel.isSearching {
-                            self.viewModel.fetchNextPage()
+
+        NavigationView {
+            List {
+                Section {
+                    SeachTextField(typedText: viewModel.$typedText.value)
+                }
+                Section {
+                    MoviesSection(viewModel: viewModel)
+                }
+                if viewModel.movies.isEmpty == false {
+                    Rectangle()
+                        .foregroundColor(.clear)
+                        .onAppear {
+                            if !self.viewModel.movies.isEmpty, !self.viewModel.isSearching {
+                                self.viewModel.fetchNextPage()
+                            }
                         }
-                    }
+                }
             }
+            .navigationBarTitle(Text("Popular Movies"))
         }
-        
     }
 }
 
 struct ImageView: View {
     
-    @ObservedObject var imageLoader: ImageLoader
+    @ObservedObject var imageLoader: AsynchronousImageLoader
         
     var body: some View {
         ZStack {
@@ -118,7 +121,9 @@ struct MoviesSection: View {
     
     var body: some View {
         ForEach(viewModel.movies) { movie in
-            MovieCell(movie: movie)
+            NavigationLink(destination: MovieDetails(movie: movie)) {
+                MovieCell(movie: movie)
+            }
         }
     }
 }
@@ -154,8 +159,8 @@ struct MovieCell: View {
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
+struct PopularMovies_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        PopularMovies()
     }
 }

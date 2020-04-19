@@ -36,21 +36,21 @@ class ImageFetcherService {
 class ImageLoadersCache {
     static let share = ImageLoadersCache()
     
-    private let cache = NSCache<NSString, ImageLoader>()
+    private let cache = NSCache<NSString, AsynchronousImageLoader>()
     
-    func create(imagePath: String?, size: ImageFetcherService.Size) -> ImageLoader {
+    func create(imagePath: String?, size: ImageFetcherService.Size) -> AsynchronousImageLoader {
         let path = NSString(string: "\(imagePath ?? "unknown path")#\(size.rawValue)")
         if let imageLoader = cache.object(forKey: path) {
             return imageLoader
         } else {
-            let loader = ImageLoader(imagePath: imagePath, size: size)
+            let loader = AsynchronousImageLoader(imagePath: imagePath, size: size)
             cache.setObject(loader, forKey: path)
             return loader
         }
     }
 }
 
-class ImageLoader: ObservableObject {
+class AsynchronousImageLoader: ObservableObject {
     @Published var image: UIImage?
     
     private let imagePath: String?
