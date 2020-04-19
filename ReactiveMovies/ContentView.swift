@@ -39,7 +39,25 @@ struct ContentView: View {
     }
 }
 
-public final class MoviesSectionViewModel: ObservableObject {
+struct ImageView: View {
+    
+    @ObservedObject var imageLoader: ImageLoader
+        
+    var body: some View {
+        ZStack {
+            if imageLoader.image != nil {
+                Image(uiImage: imageLoader.image!)
+                    .frame(maxHeight: 50)
+            } else {
+                Rectangle()
+                    .frame(maxHeight: 50)
+                    .foregroundColor(.orange)
+            }
+        }
+    }
+}
+
+final class MoviesSectionViewModel: ObservableObject {
     
     @Published var movies: [MovieDTO] = []
     
@@ -59,15 +77,14 @@ public final class MoviesSectionViewModel: ObservableObject {
         fetchMovies(page: 1)
         
         typedText.$value
-            .flatMap { typedString -> Result<[MovieDTO], Never>.Publisher in
+            .map { typedString -> [MovieDTO] in
                 if typedString.count > 0 {
                     let movies = self.fetchedData.filter { $0.title.contains(typedString) }
-                    return movies.publisher.collect()
+                    return movies
                 } else {
-                    return self.fetchedData.publisher.collect()
+                    return self.fetchedData
                 }
             }
-            .print()
             .assign(to: \.movies, on: self)
             .store(in: &subscriptions)
     }
@@ -132,9 +149,7 @@ struct MovieCell: View {
                     .foregroundColor(.gray)
                 
             }
-            Spacer()
-            Image(systemName: "tv")
-                .frame(width: 80, height: 80, alignment: .center)
+            ImageView(imageLoader: ImageLoadersCache.share.create(imagePath: movie.posterPath, size: .small))
         }
     }
 }

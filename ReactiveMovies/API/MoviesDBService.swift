@@ -13,10 +13,13 @@ struct MovieDTO: Codable, Identifiable {
     let id: Int
     let title: String
     let overview: String
+    let posterPath: String
+    
+    enum CodingKeys: String, CodingKey {
+        case id, title, overview
+        case posterPath = "poster_path"
+    }
 }
-
-let sampleMovie = MovieDTO(id: 0,
-                           title: "Test movie Test movie Test movie Test movie Test movie Test movie Test movie  Test movie Test movie Test movie", overview: "Overview")
 
 struct PaginatedResponse<T: Codable>: Codable {
     let page: Int?
