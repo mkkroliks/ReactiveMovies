@@ -9,8 +9,7 @@
 import SwiftUI
 
 struct RatingView: View {
-    
-    var percentage: CGFloat? = 60
+    @State var percentage: CGFloat? = 0
     
     @State var shouldShow: Bool = false
     
@@ -49,26 +48,55 @@ struct RatingView: View {
                     .stroke(lineWidth: 10)
                     .opacity(0.3)
                     .foregroundColor(.black)
-                Circle()
-                    .trim(from: 0, to: percentageToShow / 100)
-                    .stroke(style: StrokeStyle(lineWidth: 10, lineCap: .round, lineJoin: .round))
-                    .rotationEffect(.init(degrees: -90))
-                    .foregroundColor(color)
-                    .animation(Animation.interpolatingSpring(stiffness: 40, damping: 10).delay(0.1))
-                HStack(alignment: .top) {
-                    if percentage != nil {
-                        Text("\(Int(percentageToShow))").font(.system(size: 28)).foregroundColor(.white)
-                        Text("%").foregroundColor(.white)
-                            .font(.system(size: 16))
-                            .padding(EdgeInsets(top: 4, leading: -7, bottom: 0, trailing: 0))
-                    } else {
-                        Text("NR").font(.system(size: 28)).foregroundColor(.white)
-                    }
-                }
+                    .modifier(RankingPercentageIndicator(percentage: percentage!, color: color))
             }.padding(EdgeInsets(top: 12, leading: 12, bottom: 12, trailing: 12))
         }.frame(width:110, height: 110)
         .onAppear {
-            self.shouldShow = true
+            withAnimation(.easeInOut(duration: 10.0)) {
+                self.percentage = 90
+            }
+        }
+    }
+}
+
+
+struct RankingPercentageIndicator: AnimatableModifier {
+    var percentage: CGFloat
+    var color: Color
+    
+    var animatableData: CGFloat {
+        get { percentage }
+        set { percentage = newValue }
+    }
+    
+    func body(content: Content) -> some View {
+        content
+            .overlay(PercentageLabel(percentage: percentage).foregroundColor(.red))
+            .overlay(PercentageLine(percentage: percentage, color: color))
+    }
+    
+    struct PercentageLabel: View {
+        var percentage: CGFloat
+        
+        var body: some View {
+            HStack(alignment: .top) {
+                Text("\(Int(percentage))").font(.system(size: 28)).foregroundColor(.white)
+                Text("%").foregroundColor(.white)
+                    .font(.system(size: 16))
+                    .padding(EdgeInsets(top: 4, leading: -7, bottom: 0, trailing: 0))
+            }
+        }
+    }
+    
+    struct PercentageLine: View {
+        var percentage: CGFloat
+        var color: Color
+        var body: some View {
+            Circle()
+                .trim(from: 0, to: percentage / 100)
+                .stroke(style: StrokeStyle(lineWidth: 10, lineCap: .round, lineJoin: .round))
+                .rotationEffect(.init(degrees: -90))
+                .foregroundColor(color)
         }
     }
 }
