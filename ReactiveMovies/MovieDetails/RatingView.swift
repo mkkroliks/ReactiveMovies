@@ -9,27 +9,17 @@
 import SwiftUI
 
 struct RatingView: View {
-    @State var percentage: CGFloat? = 0
+    @State private var percent: CGFloat? = 0
     
-    @State var shouldShow: Bool = false
-    
-    var percentageToShow: CGFloat {
-        guard
-            let percentage = percentage,
-            shouldShow
-        else {
-            return 0
-        }
-        return percentage
-    }
+    var percentToShow: Float? = 0
     
     var color: Color {
-        guard let percentage = percentage else {
+        guard let percent = percent else {
             return .gray
         }
-        if percentage > 70 {
+        if percent > 70 {
             return .green
-        } else if percentage > 50 {
+        } else if percent > 50 {
             return .orange
         } else {
             return .red
@@ -42,59 +32,72 @@ struct RatingView: View {
                 .opacity(0.8)
             ZStack {
                 Circle()
-                    .stroke(lineWidth: 10)
+                    .stroke(lineWidth: 3)
                     .foregroundColor(color)
                 Circle()
-                    .stroke(lineWidth: 10)
+                    .stroke(lineWidth: 3)
                     .opacity(0.3)
                     .foregroundColor(.black)
-                    .modifier(RankingPercentageIndicator(percentage: percentage!, color: color))
-            }.padding(EdgeInsets(top: 12, leading: 12, bottom: 12, trailing: 12))
-        }.frame(width:110, height: 110)
+                    .modifier(RankingPercentIndicator(percent: percent, color: color))
+            }.padding(EdgeInsets(top: 3, leading: 3, bottom: 3, trailing: 3))
+        }
+        .frame(width:40, height: 40)
         .onAppear {
-            withAnimation(.easeInOut(duration: 10.0)) {
-                self.percentage = 90
+            withAnimation(.easeInOut(duration: 1.0)) {
+                guard let percent = self.percentToShow else {
+                    return
+                }
+                self.percent = CGFloat(percent)
             }
         }
     }
 }
 
 
-struct RankingPercentageIndicator: AnimatableModifier {
-    var percentage: CGFloat
+struct RankingPercentIndicator: AnimatableModifier {
+    var percent: CGFloat?
     var color: Color
     
-    var animatableData: CGFloat {
-        get { percentage }
-        set { percentage = newValue }
+    var animatableData: CGFloat? {
+        get { percent }
+        set { percent = newValue }
     }
     
     func body(content: Content) -> some View {
         content
-            .overlay(PercentageLabel(percentage: percentage).foregroundColor(.red))
-            .overlay(PercentageLine(percentage: percentage, color: color))
+            .overlay(PercentLabel(percent: percent).foregroundColor(.red))
+            .overlay(PercentLine(percent: percent, color: color))
     }
     
-    struct PercentageLabel: View {
-        var percentage: CGFloat
+    struct PercentLabel: View {
+        var percent: CGFloat?
         
         var body: some View {
-            HStack(alignment: .top) {
-                Text("\(Int(percentage))").font(.system(size: 28)).foregroundColor(.white)
-                Text("%").foregroundColor(.white)
-                    .font(.system(size: 16))
-                    .padding(EdgeInsets(top: 4, leading: -7, bottom: 0, trailing: 0))
+            ZStack {
+                if percent != nil {
+                    HStack(alignment: .top) {
+                        Text("\(Int(percent!))")
+                            .font(.system(size: 14)).bold()
+                            .foregroundColor(.white)
+                            .padding(.leading, 2)
+                        Text("%").foregroundColor(.white)
+                            .font(.system(size: 6))
+                            .padding(EdgeInsets(top: 2, leading: -8, bottom: 0, trailing: 0))
+                    }
+                } else {
+                    Text("\(Int(percent!))").font(.system(size: 14)).foregroundColor(.white)
+                }
             }
         }
     }
     
-    struct PercentageLine: View {
-        var percentage: CGFloat
+    struct PercentLine: View {
+        var percent: CGFloat?
         var color: Color
         var body: some View {
             Circle()
-                .trim(from: 0, to: percentage / 100)
-                .stroke(style: StrokeStyle(lineWidth: 10, lineCap: .round, lineJoin: .round))
+                .trim(from: 0, to: (percent ?? 0) / 100)
+                .stroke(style: StrokeStyle(lineWidth: 3, lineCap: .round, lineJoin: .round))
                 .rotationEffect(.init(degrees: -90))
                 .foregroundColor(color)
         }
@@ -103,6 +106,6 @@ struct RankingPercentageIndicator: AnimatableModifier {
 
 struct RatingView_Previews: PreviewProvider {
     static var previews: some View {
-        RatingView()
+        RatingView(percentToShow: nil)
     }
 }

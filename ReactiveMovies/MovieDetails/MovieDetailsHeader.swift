@@ -43,8 +43,9 @@ struct MovieDetailsHeader: View {
                         Text(self.movie.overview)
                             .foregroundColor(.white)
                             .font(Font.caption)
-                        }
-                        Spacer()
+                        RatingView(percentToShow: movie.voteAverage * 10)
+                    }
+                    Spacer()
                 }
         }
         .padding(EdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20))

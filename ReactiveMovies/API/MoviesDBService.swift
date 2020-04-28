@@ -81,6 +81,17 @@ struct MoviesDBService {
         }
     }
     
+    func getMovieCredits(id: String, completion: @escaping (Result<MovieCredits, APIService.APIError>) -> Void) {
+        APIService.shared.get(endpoint: .movieCredits(id: id)) { (result: Result<MovieCredits, APIService.APIError>) in
+            switch result {
+            case .success(let response):
+                completion(Result.success(response))
+            case .failure(let error):
+                completion(Result.failure(error))
+            }
+        }
+    }
+    
     func getPopular(page: Int) -> AnyPublisher<PaginatedResponse<MovieDTO>, APIService.APIError> {
         let future = Future<PaginatedResponse<MovieDTO>, APIService.APIError> { promise in
             self.getPopular(page: page) { result in
@@ -93,5 +104,97 @@ struct MoviesDBService {
             }
         }
         return AnyPublisher(future)
+    }
+    
+    func getMovieCredits(id: String) -> AnyPublisher<MovieCredits, APIService.APIError> {
+        let future = Future<MovieCredits, APIService.APIError> { promise in
+            self.getMovieCredits(id: id) { result in
+                switch result {
+                case .success(let credits):
+                    promise(.success(credits))
+                case .failure(let error):
+                    promise(.failure(error))
+                }
+            }
+        }
+        return AnyPublisher(future)
+    }
+}
+struct MovieCredits: Codable {
+    let id: Int
+    let cast: [Cast]
+    let crew: [Crew]
+}
+
+struct Cast: Codable, Identifiable, Hashable {
+    let castID: Int
+    let character: String
+    let creditID: String
+    let gender: Int
+    let id: Int
+    let name: String
+    let order: Int
+    let profilePath: String?
+
+    enum CodingKeys: String, CodingKey {
+        case castID = "cast_id"
+        case character
+        case creditID = "credit_id"
+        case gender, id, name, order
+        case profilePath = "profile_path"
+    }
+}
+
+struct Crew: Codable {
+    let creditID: String
+    let department: String
+    let gender: Int
+    let id: Int
+    let job: String
+    let name: String
+    let profilePath: String?
+
+    enum CodingKeys: String, CodingKey {
+        case creditID = "credit_id"
+        case department, gender, id, job, name
+        case profilePath = "profile_path"
+    }
+}
+
+struct CastFactory {
+    static func make(castID: Int = 0,
+                     character: String = "",
+                     creditID: String = "",
+                     gender: Int = 0,
+                     id: Int = 0,
+                     name: String = "",
+                     order: Int = 0,
+                     profilePath: String?) -> Cast {
+        Cast(castID: castID,
+             character: character,
+             creditID: creditID,
+             gender: gender,
+             id: id,
+             name: name,
+             order: order,
+             profilePath: profilePath)
+    }
+}
+
+struct CrewFactory {
+    static func make(creditID: String,
+                     department: String,
+                     gender: Int,
+                     id: Int,
+                     job: String,
+                     name: String,
+                     profilePath: String?) -> Crew {
+        Crew(creditID: creditID,
+             department: department,
+             gender: gender,
+             id: id,
+             job: job,
+             name: name,
+             profilePath: profilePath)
     }
 }

@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import Combine
 
 struct MovieDetails: View {
     var movie: MovieDTO
@@ -14,8 +15,10 @@ struct MovieDetails: View {
     var body: some View {
         VStack {
             MovieDetailsHeader(imageLoader: AsynchronousImageLoader(imagePath: movie.posterPath, size: .medium), movie: movie)
+            CastsView(viewModel: CastViewModel(movieId: movie.id))
+                .frame(height: 200)
             Text("Move details")
             Spacer()
-        }   
+        }
     }
 }

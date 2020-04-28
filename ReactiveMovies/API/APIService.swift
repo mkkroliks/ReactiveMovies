@@ -30,18 +30,21 @@ struct APIService {
     
     enum Endpoint {
         case popular
+        case movieCredits(id: String)
         
         var path: String {
             switch self {
             case .popular:
                 return "movie/popular"
+            case .movieCredits(let id):
+                return "movie/\(id)/credits"
             }
         }
     }
     
     func get<DTO: Codable>(
         endpoint: Endpoint,
-        params: [String: String]?,
+        params: [String: String]? = nil,
         completion: @escaping (Result<DTO, APIError>) -> Void
     ) {
         let queryURL = baseURL.appendingPathComponent(endpoint.path)
@@ -63,9 +66,6 @@ struct APIService {
         }
         
         let request = URLRequest(url: url)
-        #if DEBUG
-        print("Request: \(request)")
-        #endif
         let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
             guard let data = data else {
                 DispatchQueue.main.async {
@@ -86,9 +86,6 @@ struct APIService {
                 }
             } catch let error {
                 DispatchQueue.main.async {
-                    #if DEBUG
-                    print("JSON Decoding Error: \(error)")
-                    #endif
                     completion(.failure(.jsonDecoding(error: error)))
                 }
             }

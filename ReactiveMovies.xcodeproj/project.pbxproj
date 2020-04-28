@@ -24,6 +24,7 @@
 		9FFC972D2454A9F700B4A3BF /* MovieDetailsHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFC972C2454A9F700B4A3BF /* MovieDetailsHeader.swift */; };
 		9FFC972F2454AF8800B4A3BF /* MoviePosterImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFC972E2454AF8800B4A3BF /* MoviePosterImage.swift */; };
 		9FFC97312454B02C00B4A3BF /* RatingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFC97302454B02C00B4A3BF /* RatingView.swift */; };
+		9FFC973524562DE900B4A3BF /* CastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FFC973424562DE900B4A3BF /* CastView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -67,6 +68,7 @@
 		9FFC972C2454A9F700B4A3BF /* MovieDetailsHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieDetailsHeader.swift; sourceTree = "<group>"; };
 		9FFC972E2454AF8800B4A3BF /* MoviePosterImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviePosterImage.swift; sourceTree = "<group>"; };
 		9FFC97302454B02C00B4A3BF /* RatingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingView.swift; sourceTree = "<group>"; };
+		9FFC973424562DE900B4A3BF /* CastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CastView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -172,6 +174,7 @@
 				9FFC972C2454A9F700B4A3BF /* MovieDetailsHeader.swift */,
 				9FFC972E2454AF8800B4A3BF /* MoviePosterImage.swift */,
 				9FA4E18E244CEA12008A0433 /* MovieDetails.swift */,
+				9FFC973424562DE900B4A3BF /* CastView.swift */,
 				9FFC97302454B02C00B4A3BF /* RatingView.swift */,
 			);
 			path = MovieDetails;
@@ -335,6 +338,7 @@
 				9F16A1AC243E511E00A75CF4 /* ReactiveMovies.xcdatamodeld in Sources */,
 				9F16A1AE243E511E00A75CF4 /* PopularMovies.swift in Sources */,
 				9FA4E18C244CACBF008A0433 /* MovieDetailsBlurredImage.swift in Sources */,
+				9FFC973524562DE900B4A3BF /* CastView.swift in Sources */,
 				9FFC972F2454AF8800B4A3BF /* MoviePosterImage.swift in Sources */,
 				9F16A1A9243E511E00A75CF4 /* SceneDelegate.swift in Sources */,
 				9FA4E18F244CEA12008A0433 /* MovieDetails.swift in Sources */,
