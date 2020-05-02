@@ -17,11 +17,10 @@ class CastViewModel: ObservableObject {
     init(movieId: Int) {
         MoviesDBService.shared.getMovieCredits(id: String(movieId))
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { (completion) in
-                print("")
-            }) { [weak self] credits in
-                self?.cast = credits.cast
-            }.store(in: &subscriptions)
+            .replaceError(with: MovieCredits(id: 0, cast: [], crew: []))
+            .map { $0.cast }
+            .assign(to: \.cast, on: self)
+            .store(in: &subscriptions)
     }
 }
 
@@ -123,6 +122,5 @@ struct CastView_Previews: PreviewProvider {
         VStack {
             CastView(cast: CastFactory.make(character: "Kim Ki-taek", name: "Song Kang-ho", profilePath: nil))
         }
-        .frame(width: 120, height: 200)
     }
 }
