@@ -43,19 +43,35 @@ struct CastImage: View {
 
 struct CastsView: View {
     
+    let elementsOnScreen = 4
+    
+    let spacing: CGFloat = 5
+    
+    let padding = EdgeInsets(top: 10, leading: 0, bottom: 10, trailing: 0)
+    
     @ObservedObject var viewModel: CastViewModel
     
     var body: some View {
+        GeometryReader { reader in
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(alignment: .center) {
+                HStack(alignment: .center, spacing: self.spacing) {
                     ForEach(self.viewModel.cast, id: \.self) { cast in
-                        CastView(cast: cast)
-//                            .frame(width: 100, height: 180)
+                        return CastView(cast: cast)
+                            .frame(width: self.getProperElementFrame(reader: reader).size.width,
+                                   height: self.getProperElementFrame(reader: reader).size.height)
                     }
                 }
-                .padding(EdgeInsets(top: 10, leading: 0, bottom: 10, trailing: 0))
+                .padding(self.padding)
             }
             .id(UUID().uuidString)
+        }
+    }
+    
+    private func getProperElementFrame(reader: GeometryProxy) -> CGRect {
+        let elementWidth  = (reader.size.width - (CGFloat(elementsOnScreen - 1) * spacing)) / (CGFloat(elementsOnScreen) - 0.5)
+        let elementHeight = reader.size.height - padding.top - padding.bottom
+        print("elementWidth \(elementWidth), height \(elementHeight)")
+        return CGRect(x: 0, y: 0, width: elementWidth, height: elementHeight)
     }
 }
 
@@ -79,24 +95,26 @@ struct CastView: View {
     var cast: Cast
     
     var body: some View {
-        VStack(alignment: .leading) {
-            CastImage(imageLoader: AsynchronousImageLoader(imagePath: cast.profilePath, size: .medium))
-                .frame(height: 130)
-                .clipped()
-            VStack(alignment: .leading, spacing: 1) {
-                Text(cast.name)
-                    .foregroundColor(.black)
-                    .font(.system(size: 10)).bold()
-                Text(cast.character)
-                    .foregroundColor(.black)
-                    .font(.system(size: 10))
+        GeometryReader { reader in
+            VStack(alignment: .leading) {
+                CastImage(imageLoader: AsynchronousImageLoader(imagePath: self.cast.profilePath, size: .medium))
+                    .frame(width: reader.size.width, height: 3/4 * reader.size.height)
+                    .clipped()
+                VStack(alignment: .leading, spacing: 1) {
+                    Text(self.cast.name)
+                        .foregroundColor(.black)
+                        .font(.system(size: 10)).bold()
+                    Text(self.cast.character)
+                        .foregroundColor(.black)
+                        .font(.system(size: 10))
+                }
+                .padding(EdgeInsets(top: 0, leading: 6, bottom: 0, trailing: 6))
+                .frame(height: 1/4 * reader.size.height)
             }
-            .padding(EdgeInsets(top: 0, leading: 6, bottom: 6, trailing: 6))
-            .frame(height: 50)
+            .background(Color.white)
+            .cornerRadius(10)
+            .shadow(color: Color.gray.opacity(0.3), radius: 6)
         }
-        .background(Color.white)
-        .cornerRadius(10)
-        .shadow(color: Color.gray.opacity(0.3), radius: 6)
     }
 }
 
