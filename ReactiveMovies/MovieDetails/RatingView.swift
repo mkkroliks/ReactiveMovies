@@ -58,8 +58,8 @@ struct RankingPercentIndicator: AnimatableModifier {
     var percent: CGFloat?
     var color: Color
     
-    var animatableData: CGFloat? {
-        get { percent }
+    var animatableData: CGFloat {
+        get { percent ?? 0 }
         set { percent = newValue }
     }
     
@@ -106,6 +106,6 @@ struct RankingPercentIndicator: AnimatableModifier {
 
 struct RatingView_Previews: PreviewProvider {
     static var previews: some View {
-        RatingView(percentToShow: nil)
+        RatingView(percentToShow: 96)
     }
 }
