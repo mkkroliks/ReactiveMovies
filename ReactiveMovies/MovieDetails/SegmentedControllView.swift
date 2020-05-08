@@ -18,6 +18,16 @@ struct WidthPreferenceKey: PreferenceKey {
     typealias Value = CGFloat
 }
 
+struct HeightPreferenceKey: PreferenceKey {
+    static var defaultValue = CGFloat(0)
+
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = nextValue()
+    }
+
+    typealias Value = CGFloat
+}
+
 
 extension VerticalAlignment {
     private enum MyVerticalAlignment : AlignmentID {
@@ -51,56 +61,61 @@ struct SegmentedControllView: View {
     @State private var w: [CGFloat] = [0, 0, 0, 0]
     
     let categories: [String] = ["Streaming", "On TV", "For Rent", "In theaters"]
+    
+    @State private var height: CGFloat = 0
 
     var body: some View {
-        GeometryReader { reader in
-            ZStack(alignment: .myAlignment) {
-                HStack(alignment: Alignment.myAlignment.vertical) {
-                    ForEach(self.categories.indices, id: \.self) { index in
-                        Group {
-                            if index == self.selectedIndex {
-                                Text(self.categories[index])
-                                    .transition(AnyTransition.identity)
-                                    .alignmentGuide(Alignment.myAlignment.horizontal) { d in d[HorizontalAlignment.center]
+        ZStack(alignment: .myAlignment) {
+            HStack(alignment: Alignment.myAlignment.vertical) {
+                ForEach(self.categories.indices, id: \.self) { index in
+                    Group {
+                        if index == self.selectedIndex {
+                            Text(self.categories[index])
+                                .transition(AnyTransition.identity)
+                                .alignmentGuide(Alignment.myAlignment.horizontal) { d in d[HorizontalAlignment.center]
+                                }
+                                .padding()
+                                .font(.system(size: 10))
+                                .background(GeometryReader { geometry in
+                                    Color.clear
+                                        .preference(key: WidthPreferenceKey.self, value: geometry.size.width)
+                                        .preference(key: HeightPreferenceKey.self, value: geometry.size.height)
+                                })
+                                .onPreferenceChange(WidthPreferenceKey.self, perform: {
+                                    self.w[index] = $0
+                                })
+                                .onPreferenceChange(HeightPreferenceKey.self, perform: {
+                                    self.height = $0
+                                })
+                        } else {
+                            Text(self.categories[index])
+                                .transition(AnyTransition.identity)
+                                .onTapGesture {
+                                    withAnimation {
+                                        self.selectedIndex = index
                                     }
-                                    .padding()
-                                    .font(.system(size: 10))
-                                    .background(GeometryReader { geometry in
-                                        Color.clear.preference(key: WidthPreferenceKey.self, value: geometry.size.width)
-                                    })
-                                    .onPreferenceChange(WidthPreferenceKey.self, perform: {
-                                        self.w[index] = $0
-                                    })
-                                
-                            } else {
-                                Text(self.categories[index])
-                                    .transition(AnyTransition.identity)
-                                    .onTapGesture {
-                                        withAnimation {
-                                            self.selectedIndex = index
-                                        }
-                                    }
-                                    .onPreferenceChange(WidthPreferenceKey.self, perform: {
-                                        self.w[index] = $0
-                                    })
-                                    .padding()
-                                    .font(.system(size: 10))
-                            }
+                                }
+                                .onPreferenceChange(WidthPreferenceKey.self, perform: {
+                                    self.w[index] = $0
+                                })
+                                .padding()
+                                .font(.system(size: 10))
                         }
                     }
                 }
-                .transition(AnyTransition.identity)
-                .alignmentGuide(Alignment.myAlignment.vertical) { d in d[VerticalAlignment.center] }
-                Rectangle()
-                    .frame(width: self.w[self.selectedIndex], height: 40)
-                    .background(Color.black).opacity(0.1)
-                    .alignmentGuide(Alignment.myAlignment.vertical) { d in
-                        d[VerticalAlignment.center]
-                    }
             }
-            .clipped()
-            .overlay(RoundedRectangle(cornerRadius: reader.size.height / 2, style: .circular).stroke(lineWidth: 1))
+            .transition(AnyTransition.identity)
+            .alignmentGuide(Alignment.myAlignment.vertical) { d in d[VerticalAlignment.center] }
+            Rectangle()
+                .frame(width: self.w[self.selectedIndex], height: height)
+                .background(Color.black).opacity(0.1)
+                .alignmentGuide(Alignment.myAlignment.vertical) { d in
+                    d[VerticalAlignment.center]
+                }
         }
+        .clipped()
+        .cornerRadius(height / 2)
+        .overlay(RoundedRectangle(cornerRadius: height / 2, style: .circular).stroke(lineWidth: 1))
     }
 }
 
