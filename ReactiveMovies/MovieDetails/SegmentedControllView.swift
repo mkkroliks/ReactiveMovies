@@ -60,9 +60,9 @@ struct SegmentedControllView: View {
     
     @State private var w: [CGFloat] = [0, 0, 0, 0]
     
-    let categories: [String] = ["Streaming", "On TV", "For Rent", "In theaters"]
-    
     @State private var height: CGFloat = 0
+    
+    let categories: [String] = ["Streaming", "On TV", "For Rent", "In theaters"]
 
     var body: some View {
         ZStack(alignment: .myAlignment) {
@@ -90,6 +90,12 @@ struct SegmentedControllView: View {
                         } else {
                             Text(self.categories[index])
                                 .transition(AnyTransition.identity)
+                                .padding()
+                                .font(.system(size: 10))
+                                .background(GeometryReader { geometry in
+                                    Color.clear
+                                        .preference(key: WidthPreferenceKey.self, value: geometry.size.width)
+                                })
                                 .onTapGesture {
                                     withAnimation {
                                         self.selectedIndex = index
@@ -98,8 +104,6 @@ struct SegmentedControllView: View {
                                 .onPreferenceChange(WidthPreferenceKey.self, perform: {
                                     self.w[index] = $0
                                 })
-                                .padding()
-                                .font(.system(size: 10))
                         }
                     }
                 }
@@ -112,10 +116,18 @@ struct SegmentedControllView: View {
                 .alignmentGuide(Alignment.myAlignment.vertical) { d in
                     d[VerticalAlignment.center]
                 }
+                .cornerRadius(height / 2)
         }
         .clipped()
         .cornerRadius(height / 2)
         .overlay(RoundedRectangle(cornerRadius: height / 2, style: .circular).stroke(lineWidth: 1))
+    }
+}
+
+extension View {
+    func Print(_ vars: Any...) -> some View {
+        for v in vars { print(v) }
+        return EmptyView()
     }
 }
 

@@ -22,6 +22,13 @@ struct PopularMovies: View {
         NavigationView {
             List {
                 Section {
+                    HStack {
+                        Spacer()
+                        SegmentedControllView()
+                        Spacer()
+                    }
+                }
+                Section {
                     SeachTextField(typedText: viewModel.$typedText.value)
                 }
                 Section {
