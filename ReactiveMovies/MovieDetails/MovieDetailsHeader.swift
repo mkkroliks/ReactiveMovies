@@ -27,15 +27,6 @@ struct MovieDetailsHeader: View {
                 HStack(alignment: .top) {
                     MoviePosterImage(imageLoader: self.imageLoader)
                     VStack(alignment: .leading) {
-                        HStack {
-                            Text(self.movie.title)
-                                .foregroundColor(.white)
-                                .font(Font.headline.bold())
-                            Text(self.releaseDate)
-                                .foregroundColor(.white)
-                                .font(Font.headline.weight(.light))
-                        }
-                        .padding(.bottom, 15)
                         Text("Overview")
                             .foregroundColor(.white)
                             .font(Font.subheadline.bold())
@@ -48,7 +39,7 @@ struct MovieDetailsHeader: View {
                     Spacer()
                 }
         }
-        .padding(EdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20))
+        .padding(EdgeInsets(top: 20 + 100, leading: 20, bottom: 20, trailing: 20))
         .background(MovieDetailsBlurredImage(imageLoader: imageLoader))
         .clipped()
     }

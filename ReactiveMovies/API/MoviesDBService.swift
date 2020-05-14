@@ -107,17 +107,7 @@ struct MoviesDBService {
     }
     
     func getMovieCredits(id: String) -> AnyPublisher<MovieCredits, APIService.APIError> {
-        let future = Future<MovieCredits, APIService.APIError> { promise in
-            self.getMovieCredits(id: id) { result in
-                switch result {
-                case .success(let credits):
-                    promise(.success(credits))
-                case .failure(let error):
-                    promise(.failure(error))
-                }
-            }
-        }
-        return AnyPublisher(future)
+        return APIService.shared.get(endpoint: .movieCredits(id: id))
     }
 }
 struct MovieCredits: Codable {

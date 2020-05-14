@@ -20,7 +20,7 @@ struct RatingView: View {
         if percent > 70 {
             return .green
         } else if percent > 50 {
-            return .orange
+            return .yellow
         } else {
             return .red
         }

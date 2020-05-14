@@ -11,12 +11,14 @@ import Combine
 
 struct APIService {
     
-    enum APIError: Error {
+    enum APIError: Error, LocalizedError {
         case urlComponentsCreation
         case urlComponentURLCreation
         case emptyResponse
         case response(error: Error)
         case jsonDecoding(error: Error)
+        case unknown
+        case error(reason: String)
     }
     
     enum Method {
@@ -66,6 +68,7 @@ struct APIService {
         }
         
         let request = URLRequest(url: url)
+        
         let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
             guard let data = data else {
                 DispatchQueue.main.async {
@@ -91,5 +94,57 @@ struct APIService {
             }
         }
         task.resume()
+    }
+    
+    private func createURLRequest(endpoint: Endpoint, params: [String: String]? = nil) throws -> URLRequest {
+        let queryURL = baseURL.appendingPathComponent(endpoint.path)
+        guard var urlComponents = URLComponents(url: queryURL, resolvingAgainstBaseURL: true) else {
+            throw APIError.urlComponentsCreation
+        }
+        urlComponents.queryItems = [
+            URLQueryItem(name: "api_key", value: key)
+        ]
+        if let params = params {
+            for (_, value) in params.enumerated() {
+                urlComponents.queryItems?.append(URLQueryItem(name: value.key, value: value.value))
+            }
+        }
+        guard let url = urlComponents.url else {
+            throw APIError.urlComponentURLCreation
+        }
+
+        return URLRequest(url: url)
+    }
+    
+    func get<DTO: Codable>(endpoint: Endpoint, params: [String: String]? = nil) -> AnyPublisher<DTO, APIError> {
+        do {
+            let urlRequest = try createURLRequest(endpoint: endpoint, params: params)
+            return URLSession.shared.dataTaskPublisher(for: urlRequest)
+            .tryMap { data, response in
+                guard let httpResponse = response as? HTTPURLResponse, 200..<300 ~= httpResponse.statusCode else {
+                    throw APIError.unknown
+                }
+                do {
+                    let dto = try self.decoder.decode(DTO.self, from: data)
+                    return dto
+                } catch let error {
+                    throw APIError.jsonDecoding(error: error)
+                }
+            }
+            .mapError { error in
+                if let error = error as? APIError {
+                    return error
+                } else {
+                    return APIError.error(reason: error.localizedDescription)
+                }
+            }
+            .eraseToAnyPublisher()
+        } catch let error {
+            if let error = error as? APIError {
+                return Fail(error: error).eraseToAnyPublisher()
+            } else {
+                return Fail(error: APIError.error(reason: error.localizedDescription)).eraseToAnyPublisher()
+            }
+        }
     }
 }
