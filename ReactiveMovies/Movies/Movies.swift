@@ -8,6 +8,13 @@
 
 import SwiftUI
 
+struct WidthKey: PreferenceKey {
+    static let defaultValue: CGFloat? = nil
+    static func reduce(value: inout CGFloat?, nextValue: () -> CGFloat?) {
+        value = value ?? nextValue()
+    }
+}
+
 struct MovieImage: View {
     @ObservedObject var imageLoader: AsynchronousImageLoader
     
@@ -32,12 +39,14 @@ struct MovieView: View {
     
     var movie: MovieDTO
     
-    @State private var width: CGFloat = 0
+    private let imageAspectRatio: CGFloat = 1.5
+    
+    @State private var height: CGFloat = 170
     
     var body: some View {
         VStack(alignment: .leading) {
             MovieImage(imageLoader: AsynchronousImageLoader(imagePath: self.movie.posterPath, size: .medium))
-                .frame(height: 170)
+                .frame(height: height)
             RatingView(percentToShow: self.movie.voteAverage * 10, animate: false)
             VStack(alignment: .leading, spacing: 1) {
                 Text(self.movie.title)
@@ -50,7 +59,13 @@ struct MovieView: View {
             }
             .padding(EdgeInsets(top: 0, leading: 6, bottom: 0, trailing: 6))
         }
-        .background(Color.white)
+        .background(GeometryReader { reader in
+            Color.white.preference(key: WidthKey.self, value: reader.size.width)
+        })
+        .onPreferenceChange(WidthKey.self, perform: {
+            height = imageAspectRatio * ($0 ?? 0)
+            
+        })
         .cornerRadius(10)
         .shadow(color: Color.gray.opacity(0.3), radius: 6)
     }
@@ -71,7 +86,7 @@ struct Movies: View {
     var numberOfElementsInRow = 3
     
     let layout = [
-        GridItem(.adaptive(minimum: 90), spacing: 10)
+        GridItem(.adaptive(minimum: 105), spacing: 15)
     ]
     
     var elementCount = 0
