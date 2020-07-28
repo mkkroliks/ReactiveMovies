@@ -62,7 +62,7 @@ struct SegmentedControllView: View {
     
     @State private var height: CGFloat = 0
     
-    let categories: [String] = ["Streaming", "On TV", "For Rent", "In theaters"]
+    var categories: [String] = ["Streaming", "On TV", "For Rent", "In theaters"]
 
     var body: some View {
         ZStack(alignment: .myAlignment) {
@@ -91,18 +91,11 @@ struct SegmentedControllView: View {
     func createTextView(for index: Int) -> some View {
         Group {
             if index == self.selectedIndex {
-                Text(self.categories[index])
+                makeCommonText(text: self.categories[index])
                     .foregroundColor(.white)
-                    .transition(AnyTransition.identity)
                     .alignmentGuide(Alignment.myAlignment.horizontal) { d in d[HorizontalAlignment.center]
                     }
-                    .padding()
-                    .font(.system(size: 10))
-                    .background(GeometryReader { geometry in
-                        Color.clear
-                            .preference(key: WidthPreferenceKey.self, value: geometry.size.width)
-                            .preference(key: HeightPreferenceKey.self, value: geometry.size.height)
-                    })
+                    .background(SelectedItemPreferencesModifier())
                     .onPreferenceChange(WidthPreferenceKey.self, perform: {
                         self.w[index] = $0
                     })
@@ -110,15 +103,9 @@ struct SegmentedControllView: View {
                         self.height = $0
                     })
             } else {
-                Text(self.categories[index])
+                makeCommonText(text: self.categories[index])
                     .foregroundColor(Color.black)
-                    .transition(AnyTransition.identity)
-                    .padding()
-                    .font(.system(size: 10))
-                    .background(GeometryReader { geometry in
-                        Color.clear
-                            .preference(key: WidthPreferenceKey.self, value: geometry.size.width)
-                    })
+                    .background(NotSelectedItemPreferencesModifier())
                     .onTapGesture {
                         withAnimation(.easeIn(duration: 0.3)) {
                             self.selectedIndex = index
@@ -131,12 +118,38 @@ struct SegmentedControllView: View {
         }
     }
     
+    private func makeCommonText(text: String) -> some View {
+        Text(text)
+            .transition(AnyTransition.identity)
+            .padding(EdgeInsets(top: 8, leading: 12, bottom: 8, trailing: 12))
+            .font(.system(size: 12))
+    }
+    
     func makeGradient() -> some View {
         LinearGradient(
             gradient: .init(colors: [Color("SegmentedControlGradientStart"), Color("SegmentedControlGradientEnd")]),
             startPoint: .topLeading,
             endPoint: .bottomTrailing
         )
+    }
+}
+
+struct SelectedItemPreferencesModifier: View {
+    var body: some View {
+        GeometryReader { geometry in
+            Color.clear
+                .preference(key: WidthPreferenceKey.self, value: geometry.size.width)
+                .preference(key: HeightPreferenceKey.self, value: geometry.size.height)
+        }
+    }
+}
+
+struct NotSelectedItemPreferencesModifier: View {
+    var body: some View {
+        GeometryReader { geometry in
+            Color.clear
+                .preference(key: WidthPreferenceKey.self, value: geometry.size.width)
+        }
     }
 }
 
@@ -149,7 +162,10 @@ extension View {
 
 struct SegmentedControllView_Previews: PreviewProvider {
     static var previews: some View {
-        SegmentedControllView()
+//        ScrollView(.vertical) {
+            SegmentedControllView()
+//        }
 //        GradientText()
     }
 }
+

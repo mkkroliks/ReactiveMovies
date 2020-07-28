@@ -53,7 +53,7 @@ struct CastsView: View {
     var body: some View {
         GeometryReader { reader in
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(alignment: .center, spacing: self.spacing) {
+                LazyHStack(alignment: .center, spacing: self.spacing) {
                     ForEach(self.viewModel.cast, id: \.self) { cast in
                         return CastView(cast: cast)
                             .frame(width: self.getProperElementFrame(reader: reader).size.width,

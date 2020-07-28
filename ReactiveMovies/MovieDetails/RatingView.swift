@@ -26,6 +26,8 @@ struct RatingView: View {
         }
     }
     
+    var animate: Bool = true
+    
     var body: some View {
         ZStack {
             Circle()
@@ -43,7 +45,7 @@ struct RatingView: View {
         }
         .frame(width:40, height: 40)
         .onAppear {
-            withAnimation(.easeInOut(duration: 1.0)) {
+            withAnimation(.easeInOut(duration: animate ? 1.0 : 0.0)) {
                 guard let percent = self.percentToShow else {
                     return
                 }
