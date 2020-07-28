@@ -11,67 +11,19 @@ import SwiftUI
 struct MovieImage: View {
     @ObservedObject var imageLoader: AsynchronousImageLoader
     
-    @State private var width: CGFloat = 0
-    @State private var height: CGFloat = 0
-    
     var body: some View {
-        
-//        ZStack {
-////            GeometryReader { reader in
-//                if imageLoader.image != nil {
-//                    Image(uiImage: imageLoader.image!)
-////                        frame(width: reader.size.width, height: reader.size.height)
-////                        .resizable(capInsets: /*@START_MENU_TOKEN@*/EdgeInsets()/*@END_MENU_TOKEN@*/, resizingMode: /*@START_MENU_TOKEN@*/.stretch/*@END_MENU_TOKEN@*/)
-//                        .frame(width: width, height: height)
-//                        .aspectRatio(contentMode: .fill)
-//                } else {
-//                    Rectangle().background(GeometryReader { reader in
-////                        Print(reader.size.width)
-//                        Print(reader.size.height)
-//                        Print(reader.size.width)
-//                        Color.red
-//                            .preference(key: WidthPreferenceKey.self, value: reader.size.width)
-//                            .preference(key: HeightPreferenceKey.self, value: reader.size.height)
-//                    })
-//                    .onPreferenceChange(WidthPreferenceKey.self) { value in
-//                        self.width = value
-//                    }
-//                    .onPreferenceChange(HeightPreferenceKey.self) { value in
-//                        self.height = value
-//                    }
-////                    Rectangle()
-//                }
-////            }
-//        }.clipped()
-
         GeometryReader { reader in
             ZStack {
-                Print(reader.size.height)
-                Print(reader.size.width)
-                    if imageLoader.image != nil {
-                        Image(uiImage: imageLoader.image!)
-    //                        frame(width: reader.size.width, height: reader.size.height)
-    //                        .resizable(capInsets: /*@START_MENU_TOKEN@*/EdgeInsets()/*@END_MENU_TOKEN@*/, resizingMode: /*@START_MENU_TOKEN@*/.stretch/*@END_MENU_TOKEN@*/)
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                    } else {
-//                        Rectangle().background(GeometryReader { reader in
-//    //                        Print(reader.size.width)
-//
-//                            Color.red
-//                                .preference(key: WidthPreferenceKey.self, value: reader.size.width)
-//                                .preference(key: HeightPreferenceKey.self, value: reader.size.height)
-//                        })
-//                        .onPreferenceChange(WidthPreferenceKey.self) { value in
-//                            self.width = value
-//                        }
-//                        .onPreferenceChange(HeightPreferenceKey.self) { value in
-//                            self.height = value
-//                        }
-                        Rectangle()
-                    }
-    //            }
-            }.clipped()
+                if imageLoader.image != nil {
+                    Image(uiImage: imageLoader.image!)
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: reader.size.width, height: reader.size.height)
+                } else {
+                    Rectangle()
+                }
+            }
+            .clipped()
         }
     }
 }
@@ -85,7 +37,7 @@ struct MovieView: View {
     var body: some View {
         VStack(alignment: .leading) {
             MovieImage(imageLoader: AsynchronousImageLoader(imagePath: self.movie.posterPath, size: .medium))
-                .frame(height: 150)
+                .frame(height: 170)
             RatingView(percentToShow: self.movie.voteAverage * 10, animate: false)
             VStack(alignment: .leading, spacing: 1) {
                 Text(self.movie.title)
@@ -98,17 +50,9 @@ struct MovieView: View {
             }
             .padding(EdgeInsets(top: 0, leading: 6, bottom: 0, trailing: 6))
         }
-//        .background(GeometryReader { proxy in
-//            Color.red.preference(key: WidthPreferenceKey.self, value: proxy.size.width)
-//        })
         .background(Color.white)
         .cornerRadius(10)
         .shadow(color: Color.gray.opacity(0.3), radius: 6)
-//        .onPreferenceChange(WidthPreferenceKey.self) {
-//            if width != $0 {
-//                self.width = $0
-//            }
-//        }
     }
 }
 
@@ -127,9 +71,7 @@ struct Movies: View {
     var numberOfElementsInRow = 3
     
     let layout = [
-        GridItem(.adaptive(minimum: 80), spacing: 5)
-//        GridItem(.adaptive(minimum: 80), spacing: 35)
-//        GridItem(.flexible(minimum: 80), spacing: 15)
+        GridItem(.adaptive(minimum: 90), spacing: 10)
     ]
     
     var elementCount = 0
