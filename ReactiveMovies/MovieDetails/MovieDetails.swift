@@ -21,18 +21,14 @@ struct MovieDetails: View {
     }
     
     var body: some View {
-        List {
-            Section {
-                MovieDetailsHeader(imageLoader: AsynchronousImageLoader(imagePath: movie.posterPath, size: .medium), movie: movie)
-                .listRowInsets(EdgeInsets())
-            }
+        ScrollView {
+            MovieDetailsHeader(imageLoader: AsynchronousImageLoader(imagePath: movie.posterPath, size: .medium), movie: movie)
             CastsView(viewModel: CastViewModel(movieId: movie.id))
                 .frame(height: 200)
             Text("Move details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\n")
             Spacer()
         }
-        .navigationBarTitle(Text("\(movie.title) \(releaseDate)").foregroundColor(.red), displayMode: .large)
-        .edgesIgnoringSafeArea(.top)
+        .navigationBarTitle("", displayMode: .inline)
     }
     
 }

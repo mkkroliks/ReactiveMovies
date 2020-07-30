@@ -24,22 +24,30 @@ struct MovieDetailsHeader: View {
     
     var body: some View {
         ZStack {
-                HStack(alignment: .top) {
-                    MoviePosterImage(imageLoader: self.imageLoader)
-                    VStack(alignment: .leading) {
-                        Text("Overview")
-                            .foregroundColor(.white)
-                            .font(Font.subheadline.bold())
-                            .padding(.bottom, 5)
-                        Text(self.movie.overview)
-                            .foregroundColor(.white)
-                            .font(Font.caption)
-                        RatingView(percentToShow: movie.voteAverage * 10)
-                    }
+            VStack {
+                HStack {
+                    Text(self.movie.title)
+                        .font(Font.title.bold())
+                        .foregroundColor(.white)
                     Spacer()
                 }
+                HStack(alignment: .top) {
+                        MoviePosterImage(imageLoader: self.imageLoader)
+                        VStack(alignment: .leading) {
+                            Text("Overview")
+                                .foregroundColor(.white)
+                                .font(Font.subheadline.bold())
+                                .padding(.bottom, 5)
+                            Text(self.movie.overview)
+                                .foregroundColor(.white)
+                                .font(Font.caption)
+                            RatingView(percentToShow: movie.voteAverage * 10)
+                        }
+                        Spacer()
+                }
+            }
         }
-        .padding(EdgeInsets(top: 20 + 100, leading: 20, bottom: 20, trailing: 20))
+        .padding(EdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20))
         .background(MovieDetailsBlurredImage(imageLoader: imageLoader))
         .clipped()
     }

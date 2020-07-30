@@ -45,7 +45,7 @@ struct MovieView: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            MovieImage(imageLoader: AsynchronousImageLoader(imagePath: self.movie.posterPath, size: .medium))
+            MovieImage(imageLoader: AsynchronousImageLoader(imagePath: self.movie.posterPath, size: .movie))
                 .frame(height: height)
             RatingView(percentToShow: self.movie.voteAverage * 10, animate: false)
             VStack(alignment: .leading, spacing: 1) {
