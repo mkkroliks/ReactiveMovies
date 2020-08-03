@@ -9,6 +9,30 @@
 import Foundation
 import Combine
 
+struct Videos: Codable {
+    let id: Int
+    let results: [Video]
+    
+    var trailer: Video? { results.first { $0.type == .trailer }}
+}
+
+struct Video: Codable {
+    enum `Type`: String, Codable {
+        case trailer = "Trailer"
+        case unknown
+        
+        init(from decoder: Decoder) throws {
+            let container = try decoder.singleValueContainer()
+            let value = try container.decode(String.self)
+            self = Self(rawValue: value) ?? .unknown
+        }
+    }
+    let id, key: String
+    let name, site: String
+    let size: Int
+    let type: Type
+}
+
 struct APIService {
     
     enum APIError: Error, LocalizedError {
@@ -33,6 +57,8 @@ struct APIService {
     enum Endpoint {
         case popular
         case movieCredits(id: String)
+        case movieVideos(id: String)
+        case searchMovie
         
         var path: String {
             switch self {
@@ -40,6 +66,10 @@ struct APIService {
                 return "movie/popular"
             case .movieCredits(let id):
                 return "movie/\(id)/credits"
+            case .movieVideos(let id):
+                return "movie/\(id)/videos"
+            case .searchMovie:
+                return "/search/movie"
             }
         }
     }

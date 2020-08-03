@@ -8,9 +8,25 @@
 
 import SwiftUI
 
+struct DateFormatters {
+    static let moviePosterDateFormatter: DateFormatter = {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMM d, yyyy"
+        return dateFormatter
+    }()
+}
+
+extension Date {
+    func toMoviePosterDateString() -> String {
+        DateFormatters.moviePosterDateFormatter.string(from: self)
+    }
+}
+
 struct MovieDetailsHeader: View {
     
     @ObservedObject var imageLoader: AsynchronousImageLoader
+    
+    @ObservedObject var viewModel: MovieDetailsHeaderViewModel
         
     var releaseDate: String {
         guard let productionDate = movie.releaseDate else {
@@ -21,6 +37,12 @@ struct MovieDetailsHeader: View {
     }
     
     var movie: MovieDTO
+    
+    init(imageLoader: AsynchronousImageLoader, movie: MovieDTO) {
+        self.movie = movie
+        self.imageLoader = imageLoader
+        viewModel = MovieDetailsHeaderViewModel(id: String(movie.id))
+    }
     
     var body: some View {
         ZStack {
@@ -34,6 +56,18 @@ struct MovieDetailsHeader: View {
                 HStack(alignment: .top) {
                         MoviePosterImage(imageLoader: self.imageLoader)
                         VStack(alignment: .leading) {
+                            if let viewModel = viewModel.trailer {
+                                Link(destination: URL(string: "https://www.youtube.com/watch?v=\(viewModel.key)")!, label: {
+                                    HStack {
+//                                        Image(systemName: "play.rectangle")
+                                        Image(systemName: "play.fill")
+                                        Text("Watch trailer")
+                                    }
+                                    .foregroundColor(Color("SegmentedControlGradientStart"))
+                                    .padding(EdgeInsets(top: 2, leading: 6, bottom: 2, trailing: 6))
+                                    .border(Color("SegmentedControlGradientStart"), width: 1)
+                                })
+                            }
                             Text("Overview")
                                 .foregroundColor(.white)
                                 .font(Font.subheadline.bold())
@@ -41,7 +75,12 @@ struct MovieDetailsHeader: View {
                             Text(self.movie.overview)
                                 .foregroundColor(.white)
                                 .font(Font.caption)
-                            RatingView(percentToShow: movie.voteAverage * 10)
+                            HStack {
+                                RatingView(percentToShow: movie.voteAverage * 10)
+                                Text("User\nScore")
+                                    .foregroundColor(.white)
+                                    .font(Font.caption.bold())
+                            }
                         }
                         Spacer()
                 }

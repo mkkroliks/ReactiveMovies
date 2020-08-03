@@ -16,7 +16,7 @@ class ImageFetcherService {
         case small = "https://image.tmdb.org/t/p/w154/"
         case medium = "https://image.tmdb.org/t/p/w500/"
         case cast = "https://image.tmdb.org/t/p/w185/"
-        case movie = "https://image.tmdb.org/t/p/w200/"
+        case movie = "https://image.tmdb.org/t/p/w400/"
         case original = "https://image.tmdb.org/t/p/original/"
         
         func path(path: String) -> URL {

@@ -109,6 +109,14 @@ struct MoviesDBService {
     func getMovieCredits(id: String) -> AnyPublisher<MovieCredits, APIService.APIError> {
         return APIService.shared.get(endpoint: .movieCredits(id: id))
     }
+    
+    func getMovieVideos(id: String) -> AnyPublisher<Videos, APIService.APIError> {
+        return APIService.shared.get(endpoint: .movieVideos(id: id))
+    }
+    
+    func searchMovie(text: String) -> AnyPublisher<PaginatedResponse<MovieDTO>, APIService.APIError> {
+        return APIService.shared.get(endpoint: .searchMovie, params: ["query": text])
+    }
 }
 struct MovieCredits: Codable {
     let id: Int

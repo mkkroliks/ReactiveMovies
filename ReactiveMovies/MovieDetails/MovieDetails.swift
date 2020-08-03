@@ -9,8 +9,32 @@
 import SwiftUI
 import Combine
 
+class MovieDetailsHeaderViewModel: ObservableObject {
+    
+    @Published var trailer: Video?
+    
+    private var subscriptions = Set<AnyCancellable>()
+    
+    init(id: String) {
+        MoviesDBService.shared.getMovieVideos(id: id)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .finished:
+                    break
+                case .failure(let error):
+                    print(error)
+                }
+            }, receiveValue: { videos in
+                self.trailer = videos.trailer
+            })
+            .store(in: &subscriptions)
+    }
+}
+
 struct MovieDetails: View {
     var movie: MovieDTO
+    @State var trailer: Video?
     
     var releaseDate: String {
         guard let productionDate = movie.releaseDate else {
@@ -28,7 +52,7 @@ struct MovieDetails: View {
             Text("Move details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\n")
             Spacer()
         }
-        .navigationBarTitle("", displayMode: .inline)
+        .navigationBarTitle(movie.title, displayMode: .inline)
     }
     
 }
