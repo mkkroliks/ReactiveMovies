@@ -94,8 +94,7 @@ struct SegmentedControllView: View {
             if index == self.selectedIndex {
                 makeCommonText(text: self.categories[index])
                     .foregroundColor(.white)
-                    .alignmentGuide(Alignment.myAlignment.horizontal) { d in d[HorizontalAlignment.center]
-                    }
+                    .alignmentGuide(Alignment.myAlignment.horizontal) { d in d[HorizontalAlignment.center] }
                     .background(SelectedItemPreferencesModifier())
                     .onPreferenceChange(WidthPreferenceKey.self, perform: {
                         self.w[index] = $0

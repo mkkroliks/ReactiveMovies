@@ -36,6 +36,30 @@ struct MovieImage: View {
     }
 }
 
+extension VerticalAlignment {
+    enum RatingAndPoster: AlignmentID {
+        static func defaultValue(in context: ViewDimensions) -> CGFloat {
+            context[.top]
+        }
+    }
+    
+    static let ratingAndPosterVerticalAlignment = VerticalAlignment(RatingAndPoster.self)
+}
+
+extension HorizontalAlignment {
+    enum RatingAndPoster: AlignmentID {
+        static func defaultValue(in context: ViewDimensions) -> CGFloat {
+            context[.leading]
+        }
+    }
+    
+    static let ratingAndPosterHorizontalAlignment = HorizontalAlignment(RatingAndPoster.self)
+}
+
+extension Alignment {
+    static let ratingAndPosterAlignment = Alignment(horizontal: .ratingAndPosterHorizontalAlignment, vertical: .ratingAndPosterVerticalAlignment)
+}
+
 struct MovieView: View {
     
     var movie: MovieDTO
@@ -45,32 +69,46 @@ struct MovieView: View {
     @State private var height: CGFloat = 170
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            MovieImage(imageLoader: AsynchronousImageLoader(imagePath: self.movie.posterPath, size: .movie))
-                .frame(height: height)
-            VStack(alignment: .leading) {
-                RatingView(percentToShow: self.movie.voteAverage * 10, animate: false).offset(x: 0, y: -20)
-                VStack(alignment: .leading, spacing: 1) {
-                    Text(self.movie.title)
-                        .foregroundColor(.black)
-                        .font(.system(size: 10)).bold()
-                        .lineLimit(1)
-                    Text(self.movie.releaseDate?.toMoviePosterDateString() ?? "")
-                        .foregroundColor(.black)
-                        .font(.system(size: 10))
+        ZStack(alignment: .ratingAndPosterAlignment) {
+            VStack(alignment: .leading, spacing: 0) {
+                MovieImage(imageLoader: AsynchronousImageLoader(imagePath: self.movie.posterPath, size: .movie))
+                    .frame(height: height)
+                    .alignmentGuide(.ratingAndPosterVerticalAlignment) { dimension in
+                        dimension[.bottom]
+                    }
+                VStack(alignment: .leading) {
+                    VStack(alignment: .leading, spacing: 1) {
+                        Text(self.movie.title)
+                            .foregroundColor(.black)
+                            .font(.system(size: 10)).bold()
+                            .lineLimit(1)
+                        Text(self.movie.releaseDate?.toMoviePosterDateString() ?? "")
+                            .foregroundColor(.black)
+                            .font(.system(size: 10))
+                    }
+                    .alignmentGuide(.ratingAndPosterHorizontalAlignment) { dimension in
+                        dimension[.leading]
+                    }
                 }
+                .padding(EdgeInsets(top: 30, leading: 8, bottom: 10, trailing: 8))
             }
-            .padding(EdgeInsets(top: 0, leading: 8, bottom: 6, trailing: 8))
-        }
-        .background(GeometryReader { reader in
-            Color.white.preference(key: WidthKey.self, value: reader.size.width)
-        })
-        .onPreferenceChange(WidthKey.self, perform: {
-            height = imageAspectRatio * ($0 ?? 0)
+            .background(GeometryReader { reader in
+                Color.white.preference(key: WidthKey.self, value: reader.size.width)
+            })
+            .onPreferenceChange(WidthKey.self, perform: {
+                height = imageAspectRatio * ($0 ?? 0)
+            })
+            .cornerRadius(10)
+            .shadow(color: Color.gray.opacity(0.3), radius: 6)
             
-        })
-        .cornerRadius(10)
-        .shadow(color: Color.gray.opacity(0.3), radius: 6)
+            RatingView(percentToShow: self.movie.voteAverage * 10, animate: false)
+                .alignmentGuide(.ratingAndPosterHorizontalAlignment) { dimension in
+                    dimension[.leading]
+                }
+                .alignmentGuide(.ratingAndPosterVerticalAlignment) { dimension in
+                    dimension[VerticalAlignment.center]
+                }
+        }
     }
 }
 
