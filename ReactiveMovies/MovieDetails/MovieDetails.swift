@@ -85,7 +85,7 @@ struct MovieDetails: View {
                         self.posterPosition = posterPosition
                         self.startPosterAnimation = false
                         Timer.scheduledTimer(withTimeInterval: 0.01, repeats: false) { (timer) in
-                            self.posterPosition = CGRect(x: 15, y: 15ć, width: UIScreen.main.bounds.width - 30, height: 300)
+                            self.posterPosition = CGRect(x: 15, y: 15, width: UIScreen.main.bounds.width - 30, height: 300)
                             self.startPosterAnimation = true
                         }
                     }
@@ -96,25 +96,22 @@ struct MovieDetails: View {
                     Spacer()
                 }
             }
-//            if startPosterAnimation {
                 Print(posterPosition.origin.x)
                 Print(posterPosition.origin.y)
-                Rectangle()
-                    .frame(width: posterPosition.width, height: posterPosition.height)
-                    .offset(x: posterPosition.origin.x, y: posterPosition.origin.y)
-//                    .opacity(startPosterAnimation ? 1 : 0)
-//                    .background(Color.blue)
-                    .animation(.easeInOut(duration: 1.0), value: self.startPosterAnimation)
-                    
-//                    .animation(.easeInOut(duration: 1.0), value: startPosterAnimation)
             
-                    
-//                                       .transition(.opacity)
-//                    .opacity(0)
-                    
-//                    .position(x: posterPosition.origin.x, y: posterPosition.origin.y)
-//                    .position(x: 0, y: 0)
-//            }
+            Image(uiImage: UIImage(named: "parasite")!)
+                .frame(width: posterPosition.width, height: posterPosition.height)
+                .aspectRatio(contentMode: .fill)
+                .clipped()
+                .opacity(startPosterAnimation ? 1 : 0)
+                .offset(x: posterPosition.origin.x, y: posterPosition.origin.y)
+                .animation(.easeInOut(duration: 1.0), value: self.startPosterAnimation)
+            
+            // working
+//                Rectangle()
+//                    .frame(width: posterPosition.width, height: posterPosition.height)
+//                    .offset(x: posterPosition.origin.x, y: posterPosition.origin.y)
+//                    .animation(.easeInOut(duration: 1.0), value: self.startPosterAnimation)
         }
 //        .alignmentGuide(.top) { _ in
 //
