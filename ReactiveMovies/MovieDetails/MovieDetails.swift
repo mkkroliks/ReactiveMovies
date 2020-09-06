@@ -32,9 +32,24 @@ class MovieDetailsHeaderViewModel: ObservableObject {
     }
 }
 
+class PosterPosition: ObservableObject {
+    @Published var value: CGRect = .zero
+}
+
 struct MovieDetails: View {
     var movie: MovieDTO
-    @State var trailer: Video?
+    
+    @State var isShowingContent = false
+    
+//    @ObservedObject var posterPosition = PosterPosition()
+    
+//    @ObservedObject var posterPosition = PosterPosition()
+    
+    @State var posterPosition = CGRect.zero
+    
+    @State var startPosterAnimation = false
+    
+    private var subscriptions = Set<AnyCancellable>()
     
     var releaseDate: String {
         guard let productionDate = movie.releaseDate else {
@@ -44,15 +59,78 @@ struct MovieDetails: View {
         return "(" + String(calendar.component(.year, from: productionDate)) + ")"
     }
     
+    init(movie: MovieDTO) {
+        self.movie = movie
+//        posterPosition
+//            .objectWillChange
+//            .sink(receiveCompletion: { completion in
+//                switch completion {
+//                case .finished:
+//                    break
+//                case .failure(let error):
+//                    print(error)
+//                }
+//            }, receiveValue: { response in
+//                print(response)
+////                print(self.posterPosition.value)
+//            })
+//        .store(in: &subscriptions)
+    }
+    
     var body: some View {
-        ScrollView {
-            MovieDetailsHeader(imageLoader: AsynchronousImageLoader(imagePath: movie.posterPath, size: .medium), movie: movie)
-            CastsView(viewModel: CastViewModel(movieId: movie.id))
-                .frame(height: 200)
-            Text("Move details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\n")
-            Spacer()
+        ZStack(alignment: .topLeading) {
+            ScrollView {
+                if isShowingContent {
+                    MovieDetailsHeader(imageLoader: AsynchronousImageLoader(imagePath: movie.posterPath, size: .medium), movie: movie) { posterPosition in
+                        self.posterPosition = posterPosition
+                        self.startPosterAnimation = false
+                        Timer.scheduledTimer(withTimeInterval: 0.01, repeats: false) { (timer) in
+                            self.posterPosition = CGRect(x: 15, y: 15ć, width: UIScreen.main.bounds.width - 30, height: 300)
+                            self.startPosterAnimation = true
+                        }
+                    }
+                    CastsView(viewModel: CastViewModel(movieId: movie.id))
+                        .frame(height: 200)
+                    Text(posterPosition.debugDescription)
+                    Text("details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\n")
+                    Spacer()
+                }
+            }
+//            if startPosterAnimation {
+                Print(posterPosition.origin.x)
+                Print(posterPosition.origin.y)
+                Rectangle()
+                    .frame(width: posterPosition.width, height: posterPosition.height)
+                    .offset(x: posterPosition.origin.x, y: posterPosition.origin.y)
+//                    .opacity(startPosterAnimation ? 1 : 0)
+//                    .background(Color.blue)
+                    .animation(.easeInOut(duration: 1.0), value: self.startPosterAnimation)
+                    
+//                    .animation(.easeInOut(duration: 1.0), value: startPosterAnimation)
+            
+                    
+//                                       .transition(.opacity)
+//                    .opacity(0)
+                    
+//                    .position(x: posterPosition.origin.x, y: posterPosition.origin.y)
+//                    .position(x: 0, y: 0)
+//            }
         }
+//        .alignmentGuide(.top) { _ in
+//
+//        }
+//        .alignmentGuide(.leading) { _ in
+//
+//        }
+//        .onPreferenceChange(PosterFramePreferenceKey.self) { print("FRAME: \($0)") }
+        .onPreferenceChange(PosterFramePreferenceKey.self, perform: {
+            print("🩸 Preference changed \($0)")
+        })
         .navigationBarTitle(movie.title, displayMode: .inline)
+        .coordinateSpace(name: "MovieDetails.main")
+        .onAppear {
+            self.isShowingContent = true
+        }
     }
     
 }

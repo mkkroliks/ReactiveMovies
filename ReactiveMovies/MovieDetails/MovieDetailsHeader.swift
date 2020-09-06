@@ -22,10 +22,25 @@ extension Date {
     }
 }
 
+struct PosterFramePreferenceKey: PreferenceKey {
+    static var defaultValue: CGRect = CGRect(x: 1, y: 1, width: 1, height: 1)
+    
+    static func reduce(value: inout CGRect, nextValue: () -> CGRect) {
+//        let changed = value + 1
+//        let changedValue = value
+//        value = CGRect(x: value.minX + 1, y: value.minY + 1, width: value.width, height: value.height)
+//        value = changedValue
+//        value = nextValue()
+//        let newValue = nextValue()
+//        value = newValue
+    }
+    
+//    typealias Value = CGRect
+}
+
 struct MovieDetailsHeader: View {
     
     @ObservedObject var imageLoader: AsynchronousImageLoader
-    
     @ObservedObject var viewModel: MovieDetailsHeaderViewModel
         
     var releaseDate: String {
@@ -38,9 +53,14 @@ struct MovieDetailsHeader: View {
     
     var movie: MovieDTO
     
-    init(imageLoader: AsynchronousImageLoader, movie: MovieDTO) {
+    var onTapPoster: ((CGRect) -> Void)?
+    
+    @State var posterPosition: CGRect = .zero
+    
+    init(imageLoader: AsynchronousImageLoader, movie: MovieDTO, onTapPoster: ((CGRect) -> Void)? = nil) {
         self.movie = movie
         self.imageLoader = imageLoader
+        self.onTapPoster = onTapPoster
         viewModel = MovieDetailsHeaderViewModel(id: String(movie.id))
     }
     
@@ -55,11 +75,30 @@ struct MovieDetailsHeader: View {
                 }
                 HStack(alignment: .top) {
                         MoviePosterImage(imageLoader: self.imageLoader)
+                            .background(GeometryReader { reader in
+//                                print(reader.frame(in: .named("MovieDetails.main")))
+//                                Print("PRINT WIDTH :\(reader.size.width)")
+//                                Print("PRINT FRAME: : \(reader.frame(in: .named("MovieDetails.main")))")
+//                                Print("PRINT GLOBAL FRAME: : \(reader.frame(in: .global))")
+//                                Print("PRINT LOCAL FRAME: : \(reader.frame(in: .local))")
+//                                ZStack {
+//                                    Print("PRINT LOCAL FRAME: : \(reader.frame(in: .local))")
+//                                }
+//                                Color.clear.preference(key: PosterFramePreferenceKey.self, value: reader.frame(in: .global))
+                                Color.clear.preference(key: PosterFramePreferenceKey.self, value: reader.frame(in: .named("MovieDetails.main")))
+//                                Color.clear.preference(key: PosterFramePreferenceKey.self, value: reader.frame(in:.global))
+                            })
+                            .onPreferenceChange(PosterFramePreferenceKey.self, perform: {
+                                posterPosition = $0
+                                print("🟢 Preference changed \($0)")
+//                                posterPosition = $0
+                            }).onTapGesture {
+                                onTapPoster?(posterPosition)
+                            }
                         VStack(alignment: .leading) {
                             if let viewModel = viewModel.trailer {
                                 Link(destination: URL(string: "https://www.youtube.com/watch?v=\(viewModel.key)")!, label: {
                                     HStack {
-//                                        Image(systemName: "play.rectangle")
                                         Image(systemName: "play.fill")
                                         Text("Watch trailer")
                                     }
@@ -92,9 +131,9 @@ struct MovieDetailsHeader: View {
     }
 }
 
-struct MovieDetailsHeader_Previews: PreviewProvider {
-    static var previews: some View {
-        MovieDetailsHeader(imageLoader: ImageLoaderMock(image: UIImage(named: "parasite")!),
-                           movie: MovieDTOFactory.make(overview: "All unemployed, Ki-taek's family takes peculiar interest in the wealthy and glamorous Parks for their livelihood until they get entangled in an unexpected incident.", title: "Parasite"))
-    }
-}
+//struct MovieDetailsHeader_Previews: PreviewProvider {
+//    static var previews: some View {
+//        MovieDetailsHeader(imageLoader: ImageLoaderMock(image: UIImage(named: "parasite")!),
+//                           movie: MovieDTOFactory.make(overview: "All unemployed, Ki-taek's family takes peculiar interest in the wealthy and glamorous Parks for their livelihood until they get entangled in an unexpected incident.", title: "Parasite"), posterPosition: .zero)
+//    }
+//}

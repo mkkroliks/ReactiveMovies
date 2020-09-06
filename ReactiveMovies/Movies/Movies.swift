@@ -22,8 +22,8 @@ struct MovieImage: View {
     var body: some View {
         GeometryReader { reader in
             ZStack {
-                if imageLoader.image != nil {
-                    Image(uiImage: imageLoader.image!)
+                if let image = imageLoader.image {
+                    Image(uiImage: image)
                         .resizable()
                         .aspectRatio(contentMode: .fill)
                         .frame(width: reader.size.width, height: reader.size.height)

@@ -29,8 +29,8 @@ struct CastImage: View {
     
     var body: some View {
         ZStack {
-            if imageLoader.image != nil {
-                Image(uiImage: imageLoader.image!)
+            if let image = imageLoader.image {
+                Image(uiImage: image)
                     .resizable()
                     .aspectRatio(contentMode: .fill)
             } else {
@@ -69,7 +69,7 @@ struct CastsView: View {
     private func getProperElementFrame(reader: GeometryProxy) -> CGRect {
         let elementWidth  = (reader.size.width - (CGFloat(elementsOnScreen - 1) * spacing)) / (CGFloat(elementsOnScreen) - 0.5)
         let elementHeight = reader.size.height - padding.top - padding.bottom
-        print("elementWidth \(elementWidth), height \(elementHeight)")
+//        print("elementWidth \(elementWidth), height \(elementHeight)")
         return CGRect(x: 0, y: 0, width: elementWidth, height: elementHeight)
     }
 }

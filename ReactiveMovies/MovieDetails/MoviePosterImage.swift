@@ -8,13 +8,26 @@
 
 import SwiftUI
 
+struct MoviePosterImageResizable: View {
+    @ObservedObject var imageLoader: AsynchronousImageLoader
+    
+    var body: some View {
+        Image(uiImage: imageLoader.image ?? UIImage())
+            .resizable()
+            .aspectRatio(contentMode: .fill)
+            .clipped()
+            .cornerRadius(8)
+    }
+}
+
+
 struct MoviePosterImage: View {
     @ObservedObject var imageLoader: AsynchronousImageLoader
     
     var body: some View {
         ZStack {
-            if imageLoader.image != nil {
-                Image(uiImage: imageLoader.image!)
+            if let image = imageLoader.image {
+                Image(uiImage: image)
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                     .frame(width: 100, height: 150)

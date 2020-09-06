@@ -25,9 +25,9 @@ struct MovieDetailsBlurredImage: View {
     
     var body: some View {
         ZStack {
-            if imageLoader.image != nil {
+            if let image = imageLoader.image {
                 ZStack {
-                    Image(uiImage: imageLoader.image!)
+                    Image(uiImage: image)
                         .resizable()
                         .aspectRatio(contentMode: .fill)
                     Blur(style: .dark)
@@ -45,7 +45,7 @@ struct MovieDetailsBlurredImage: View {
 class ImageLoaderMock: AsynchronousImageLoader {
     init(image: UIImage) {
         super.init(imagePath: nil, size: .small)
-        self.image = image
+//        self.image = image
     }
 }
 
