@@ -84,27 +84,46 @@ struct MovieDetails: View {
                     MovieDetailsHeader(imageLoader: AsynchronousImageLoader(imagePath: movie.posterPath, size: .medium), movie: movie) { posterPosition in
                         self.posterPosition = posterPosition
                         self.startPosterAnimation = false
-                        Timer.scheduledTimer(withTimeInterval: 0.01, repeats: false) { (timer) in
-                            self.posterPosition = CGRect(x: 15, y: 15, width: UIScreen.main.bounds.width - 30, height: 300)
+                        Timer.scheduledTimer(withTimeInterval: 0.1, repeats: false) { (timer) in
+                            self.posterPosition = CGRect(x: 15, y: 15, width: UIScreen.main.bounds.width - 30, height: 500)
                             self.startPosterAnimation = true
                         }
                     }
                     CastsView(viewModel: CastViewModel(movieId: movie.id))
                         .frame(height: 200)
-                    Text(posterPosition.debugDescription)
-                    Text("details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\n")
+                    Text("Move details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\n")
                     Spacer()
                 }
             }
                 Print(posterPosition.origin.x)
                 Print(posterPosition.origin.y)
+//            ZStack(alignment: .topLeading) {
+////                Image(uiImage: UIImage(named: "parasite")!)
+////                    .resizable()
+////                    .aspectRatio(contentMode: .fill)
+////                    .frame(width: 100, height: 150)
+//////                    .frame(width: posterPosition.width, height: posterPosition.height)
+//////                    .offset(x: posterPosition.origin.x, y: posterPosition.origin.y)
+////                    .cornerRadius(8)
+//////                    .animation(.easeInOut(duration: 1.0), value: self.startPosterAnimation)
+////                    .background(Color.red)
+//                Rectangle()
+//                    .frame(width: 100, height: 150, alignment: .topLeading)
+//            }
+//            .frame(width: UIScreen.main.bounds.width, height: 600)
+//            .background(Color.blue)
+//            .background(startPosterAnimation ? Color.blue : nil)
             
-            Image(uiImage: UIImage(named: "parasite")!)
+
+            
+//            MoviePosterImageResizable(imageLoader: AsynchronousImageLoader(imagePath: movie.posterPath, size: .medium))
+//            Image(uiImage: UIImage(named: "parasite")!)
+            MoviePosterImageResizable(imageLoader: AsynchronousImageLoader(imagePath: movie.posterPath, size: .medium))
                 .frame(width: posterPosition.width, height: posterPosition.height)
-                .aspectRatio(contentMode: .fill)
-                .clipped()
-                .opacity(startPosterAnimation ? 1 : 0)
                 .offset(x: posterPosition.origin.x, y: posterPosition.origin.y)
+                .padding(EdgeInsets(top: 0, leading: 0, bottom: posterPosition.origin.y, trailing: posterPosition.origin.x))
+                .clipped()
+                .aspectRatio(contentMode: .fit)
                 .animation(.easeInOut(duration: 1.0), value: self.startPosterAnimation)
             
             // working
@@ -112,6 +131,19 @@ struct MovieDetails: View {
 //                    .frame(width: posterPosition.width, height: posterPosition.height)
 //                    .offset(x: posterPosition.origin.x, y: posterPosition.origin.y)
 //                    .animation(.easeInOut(duration: 1.0), value: self.startPosterAnimation)
+            
+            //Partially working with image
+//            Image(uiImage: UIImage(named: "parasite")!)
+////            MoviePosterImageResizable(imageLoader: AsynchronousImageLoader(imagePath: movie.posterPath, size: .medium))
+//                .resizable()
+//                .aspectRatio(contentMode: .fill)
+////                .frame(width: 100, height: 150)
+//                .frame(width: posterPosition.width, height: posterPosition.height)
+//                .offset(x: posterPosition.origin.x, y: posterPosition.origin.y)
+//                .padding(EdgeInsets(top: 0, leading: 0, bottom: posterPosition.origin.y, trailing: posterPosition.origin.x))
+////                .background(Color.red)
+////                .cornerRadius(8)
+//                .animation(.easeInOut(duration: 1.0), value: self.startPosterAnimation)
         }
 //        .alignmentGuide(.top) { _ in
 //

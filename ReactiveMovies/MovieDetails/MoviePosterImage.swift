@@ -12,11 +12,16 @@ struct MoviePosterImageResizable: View {
     @ObservedObject var imageLoader: AsynchronousImageLoader
     
     var body: some View {
-        Image(uiImage: imageLoader.image ?? UIImage())
+        Image(uiImage: UIImage(named: "parasite")!)
+//        Image(uiImage: imageLoader.image ?? UIImage())
             .resizable()
             .aspectRatio(contentMode: .fill)
-            .clipped()
-            .cornerRadius(8)
+//            .resizable()
+//            .aspectRatio(contentMode: .fill)
+//            .clipped()
+//            .cornerRadius(8)
+        // Partially working with image
+//        Image(uiImage: imageLoader.image ?? UIImage())
     }
 }
 
