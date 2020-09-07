@@ -84,7 +84,7 @@ struct MovieDetails: View {
                     MovieDetailsHeader(imageLoader: AsynchronousImageLoader(imagePath: movie.posterPath, size: .medium), movie: movie) { posterPosition in
                         self.posterPosition = posterPosition
                         self.startPosterAnimation = false
-                        Timer.scheduledTimer(withTimeInterval: 0.1, repeats: false) { (timer) in
+                        Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { (timer) in
                             self.posterPosition = CGRect(x: 15, y: 15, width: UIScreen.main.bounds.width - 30, height: 500)
                             self.startPosterAnimation = true
                         }
@@ -124,7 +124,8 @@ struct MovieDetails: View {
                 .padding(EdgeInsets(top: 0, leading: 0, bottom: posterPosition.origin.y, trailing: posterPosition.origin.x))
                 .clipped()
                 .aspectRatio(contentMode: .fit)
-                .animation(.easeInOut(duration: 1.0), value: self.startPosterAnimation)
+//                .animation(.easeInOut(duration: 1.0), value: self.startPosterAnimation)
+                .animation(startPosterAnimation ? .default : nil)
             
             // working
 //                Rectangle()
