@@ -74,15 +74,15 @@ struct Movies: View {
                     .padding(EdgeInsets(top: 5, leading: 20, bottom: 5, trailing: 20))
                 Divider()
                 LazyVGrid(columns: layout, spacing: 20) {
-                    ForEach(viewModel.movies) { movie in
-                        NavigationLink(destination: MovieDetails(movie: movie)) {
-                            MovieView(movie: movie)
+                    ForEach(viewModel.moviesViewModels) { cellViewModel in
+                        NavigationLink(destination: MovieDetails(movie: cellViewModel.movie)) {
+                            MovieView(viewModel: cellViewModel)
                         }.buttonStyle(PlainButtonStyle())
                     }
                     Rectangle()
                         .foregroundColor(.clear)
                         .onAppear {
-                            if !self.viewModel.movies.isEmpty, !self.viewModel.isSearching {
+                            if !self.viewModel.moviesViewModels.isEmpty, !self.viewModel.isSearching {
                                 self.viewModel.fetchNextPage()
                             }
                         }

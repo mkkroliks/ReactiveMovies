@@ -9,43 +9,13 @@
 import SwiftUI
 import Combine
 
-class MovieDetailsHeaderViewModel: ObservableObject {
-    
-    @Published var trailer: Video?
-    
-    private var subscriptions = Set<AnyCancellable>()
-    
-    init(id: String) {
-        MoviesDBService.shared.getMovieVideos(id: id)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { completion in
-                switch completion {
-                case .finished:
-                    break
-                case .failure(let error):
-                    print(error)
-                }
-            }, receiveValue: { videos in
-                self.trailer = videos.trailer
-            })
-            .store(in: &subscriptions)
-    }
-}
-
 class PosterPosition: ObservableObject {
     @Published var value: CGRect = .zero
 }
 
-struct MovieDetails: View {
+class MovieDetailsViewModel: ObservableObject {
+    @Published var typedText: String = ""
     var movie: MovieDTO
-    
-    @State var isShowingContent = false
-    
-    @State var posterPosition = CGRect.zero
-    
-    @State var startPosterAnimation = false
-    
-    private var subscriptions = Set<AnyCancellable>()
     
     var releaseDate: String {
         guard let productionDate = movie.releaseDate else {
@@ -55,29 +25,55 @@ struct MovieDetails: View {
         return "(" + String(calendar.component(.year, from: productionDate)) + ")"
     }
     
+    @ObservedObject var headerViewModel: MovieDetailsHeaderViewModel
+    @ObservedObject var castViewModel: CastsViewModel
+    
+    @ObservedObject var posterResizableImageImageLoader: AsynchronousImageLoader
+    
     init(movie: MovieDTO) {
         self.movie = movie
+        self.headerViewModel = MovieDetailsHeaderViewModel(movie: movie)
+        self.castViewModel = CastsViewModel(movieId: movie.id)
+        self.posterResizableImageImageLoader = AsynchronousImageLoader(imagePath: movie.posterPath, size: .medium)
+    }
+}
+
+struct MovieDetails: View {
+    @State var isShowingContent = false
+    
+    @State var posterPosition = CGRect.zero
+    
+    @State var startPosterAnimation = false
+    
+    @ObservedObject var viewModel: MovieDetailsViewModel
+    
+    private var subscriptions = Set<AnyCancellable>()
+    
+    init(movie: MovieDTO) {
+        self.viewModel = MovieDetailsViewModel(movie: movie)
     }
     
     var body: some View {
         ZStack(alignment: .topLeading) {
             ScrollView {
                 if isShowingContent {
-                    MovieDetailsHeader(imageLoader: AsynchronousImageLoader(imagePath: movie.posterPath, size: .medium), movie: movie) { posterPosition in
+                    TextField("Tytuł", text: $viewModel.typedText)
+                    
+                    MovieDetailsHeader(viewModel: viewModel.headerViewModel) { posterPosition in
                         self.posterPosition = posterPosition
                         self.startPosterAnimation = false
-                        Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { (timer) in
+                        Timer.scheduledTimer(withTimeInterval: 0.05, repeats: false) { (timer) in
                             self.posterPosition = CGRect(x: 15, y: 15, width: UIScreen.main.bounds.width - 30, height: 500)
                             self.startPosterAnimation = true
                         }
                     }
-                    CastsView(viewModel: CastViewModel(movieId: movie.id))
+                    CastsView(viewModel: viewModel.castViewModel)
                         .frame(height: 200)
                     Text("Move details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\n")
                     Spacer()
                 }
             }
-            MoviePosterImageResizable(imageLoader: AsynchronousImageLoader(imagePath: movie.posterPath, size: .medium))
+            MoviePosterImageResizable(imageLoader: viewModel.posterResizableImageImageLoader)
                 .frame(width: posterPosition.width, height: posterPosition.height)
                 .offset(x: posterPosition.origin.x, y: posterPosition.origin.y)
                 .padding(EdgeInsets(top: 0, leading: 0, bottom: posterPosition.origin.y, trailing: posterPosition.origin.x))
@@ -85,10 +81,7 @@ struct MovieDetails: View {
                 .aspectRatio(contentMode: .fit)
                 .animation(startPosterAnimation ? .default : nil)
         }
-        .onPreferenceChange(PosterFramePreferenceKey.self, perform: {
-            print("🩸 Preference changed \($0)")
-        })
-        .navigationBarTitle(movie.title, displayMode: .inline)
+        .navigationBarTitle(viewModel.movie.title, displayMode: .inline)
         .coordinateSpace(name: "MovieDetails.main")
         .onAppear {
             self.isShowingContent = true

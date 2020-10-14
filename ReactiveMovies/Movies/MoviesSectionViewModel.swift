@@ -10,8 +10,8 @@ import SwiftUI
 import Combine
 
 final class MoviesSectionViewModel: ObservableObject {
-    
-    @Published var movies: [MovieDTO] = []
+        
+    @Published var moviesViewModels: [MovieViewModel] = []
     
     @ObservedObject var typedText: TypedText = TypedText()
     
@@ -33,7 +33,7 @@ final class MoviesSectionViewModel: ObservableObject {
         typedText.$value
             .filter({ (value) -> Bool in
                 if value.isEmpty {
-                    self.movies = self.fetchedData
+                    self.moviesViewModels = self.fetchedData.map { MovieViewModel(movie: $0) }
                     return false
                 }
                 return true
@@ -47,7 +47,8 @@ final class MoviesSectionViewModel: ObservableObject {
             .replaceError(with: PaginatedResponse<MovieDTO>(page: nil, totalResults: nil, totalPages: nil, results: []))
             .map(\.results)
             .receive(on: DispatchQueue.main)
-            .assign(to: \.movies, on: self)
+            .map { movies in movies.map { MovieViewModel(movie: $0) }  }
+            .assign(to: \.moviesViewModels, on: self)
             .store(in: &subscriptions)
     }
     
@@ -67,9 +68,9 @@ final class MoviesSectionViewModel: ObservableObject {
                 }
             }, receiveValue: { response in
                 let currentMoviesIds = self.fetchedData.map { $0.id }
-                self.movies += response.results.filter { !currentMoviesIds.contains($0.id) }
-                self.fetchedData += response.results
+                self.fetchedData += response.results.filter { !currentMoviesIds.contains($0.id) }
                 self.currentPage = response.page ?? 0
+                self.moviesViewModels = self.fetchedData.map { MovieViewModel(movie: $0) }
             })
         .store(in: &subscriptions)
     }

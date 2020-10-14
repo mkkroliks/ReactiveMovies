@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import Combine
 
 struct DateFormatters {
     static let moviePosterDateFormatter: DateFormatter = {
@@ -42,11 +43,8 @@ struct PosterFramePreferenceKey: PreferenceKey {
 //    typealias Value = CGRect
 }
 
-struct MovieDetailsHeader: View {
+class MovieDetailsHeaderViewModel: ObservableObject {
     
-    @ObservedObject var imageLoader: AsynchronousImageLoader
-    @ObservedObject var viewModel: MovieDetailsHeaderViewModel
-        
     var releaseDate: String {
         guard let productionDate = movie.releaseDate else {
             return ""
@@ -55,36 +53,62 @@ struct MovieDetailsHeader: View {
         return "(" + String(calendar.component(.year, from: productionDate)) + ")"
     }
     
-    var movie: MovieDTO
+    @Published var trailer: Video?
     
-    var onTapPoster: ((CGRect) -> Void)?
+    private var subscriptions = Set<AnyCancellable>()
     
-    var viewsValues = MovieDetailsHeaderValues()
+    @ObservedObject var imageLoader: AsynchronousImageLoader
     
-    init(imageLoader: AsynchronousImageLoader, movie: MovieDTO, onTapPoster: ((CGRect) -> Void)? = nil) {
+    let movie: MovieDTO
+    
+    init(movie: MovieDTO) {
+        imageLoader =  AsynchronousImageLoader(imagePath: movie.posterPath, size: .medium)
         self.movie = movie
-        self.imageLoader = imageLoader
+        MoviesDBService.shared.getMovieVideos(id: String(movie.id))
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .finished:
+                    break
+                case .failure(let error):
+                    print(error)
+                }
+            }, receiveValue: { videos in
+                self.trailer = videos.trailer
+            })
+            .store(in: &subscriptions)
+    }
+}
+
+struct MovieDetailsHeader: View {
+    
+    @ObservedObject var viewModel: MovieDetailsHeaderViewModel
+        
+    private var onTapPoster: ((CGRect) -> Void)?
+    
+    private var viewsValues = MovieDetailsHeaderValues()
+    
+    init(viewModel: MovieDetailsHeaderViewModel, onTapPoster: ((CGRect) -> Void)? = nil) {
+        self.viewModel = viewModel
         self.onTapPoster = onTapPoster
-        viewModel = MovieDetailsHeaderViewModel(id: String(movie.id))
     }
     
     var body: some View {
         ZStack {
             VStack {
                 HStack {
-                    Text(self.movie.title)
+                    Text(viewModel.movie.title)
                         .font(Font.title.bold())
                         .foregroundColor(.white)
                     Spacer()
                 }
                 HStack(alignment: .top) {
-                        MoviePosterImage(imageLoader: self.imageLoader)
+                        MoviePosterImage(imageLoader: viewModel.imageLoader)
                             .background(GeometryReader { reader in
                                 assignValue(for: reader)
                             })
                             .onPreferenceChange(PosterFramePreferenceKey.self, perform: { position in
                                 self.viewsValues.posterPosition = position
-                                print("🟢 Preference changed \(position)")
                             }).onTapGesture {
                                 onTapPoster?(viewsValues.posterPosition)
                             }
@@ -104,11 +128,11 @@ struct MovieDetailsHeader: View {
                                 .foregroundColor(.white)
                                 .font(Font.subheadline.bold())
                                 .padding(.bottom, 5)
-                            Text(self.movie.overview)
+                            Text(viewModel.movie.overview)
                                 .foregroundColor(.white)
                                 .font(Font.caption)
                             HStack {
-                                RatingView(percentToShow: movie.voteAverage * 10)
+                                RatingView(percentToShow: viewModel.movie.voteAverage * 10)
                                 Text("User\nScore")
                                     .foregroundColor(.white)
                                     .font(Font.caption.bold())
@@ -119,7 +143,7 @@ struct MovieDetailsHeader: View {
             }
         }
         .padding(EdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20))
-        .background(MovieDetailsBlurredImage(imageLoader: imageLoader))
+        .background(MovieDetailsBlurredImage(imageLoader: viewModel.imageLoader))
         .clipped()
     }
     

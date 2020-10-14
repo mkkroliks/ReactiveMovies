@@ -9,29 +9,45 @@
 import SwiftUI
 import Combine
 
-struct MovieView: View {
+class MovieViewModel: ObservableObject, Identifiable {
+    @State var height: CGFloat = 170
     
     var movie: MovieDTO
     
-    private let imageAspectRatio: CGFloat = 1.5
+    let imageAspectRatio: CGFloat = 1.5
     
-    @State private var height: CGFloat = 170
+    var id: Int { movie.id }
+    
+    var imageLoader: AsynchronousImageLoader
+    
+    init(movie: MovieDTO) {
+        self.movie = movie
+        self.imageLoader = AsynchronousImageLoader(imagePath: movie.posterPath, size: .movie)
+    }
+}
+
+struct MovieView: View {
+    @ObservedObject var viewModel: MovieViewModel
+    
+    init(viewModel: MovieViewModel) {
+        self.viewModel = viewModel
+    }
     
     var body: some View {
         ZStack(alignment: .ratingAndPosterAlignment) {
             VStack(alignment: .leading, spacing: 0) {
-                MovieImage(imageLoader: AsynchronousImageLoader(imagePath: self.movie.posterPath, size: .movie))
-                    .frame(height: height)
+                MovieImage(imageLoader: viewModel.imageLoader)
+                    .frame(height: viewModel.height)
                     .alignmentGuide(.ratingAndPosterVerticalAlignment) { dimension in
                         dimension[.bottom]
                     }
                 VStack(alignment: .leading) {
                     VStack(alignment: .leading, spacing: 1) {
-                        Text(self.movie.title)
+                        Text(viewModel.movie.title)
                             .foregroundColor(.black)
                             .font(.system(size: 10)).bold()
                             .lineLimit(1)
-                        Text(self.movie.releaseDate?.toMoviePosterDateString() ?? "")
+                        Text(viewModel.movie.releaseDate?.toMoviePosterDateString() ?? "")
                             .foregroundColor(.black)
                             .font(.system(size: 10))
                     }
@@ -45,12 +61,12 @@ struct MovieView: View {
                 Color.white.preference(key: WidthKey.self, value: reader.size.width)
             })
             .onPreferenceChange(WidthKey.self, perform: {
-                height = imageAspectRatio * ($0 ?? 0)
+                viewModel.height = viewModel.imageAspectRatio * ($0 ?? 0)
             })
             .cornerRadius(10)
             .shadow(color: Color.gray.opacity(0.3), radius: 6)
             
-            RatingView(percentToShow: self.movie.voteAverage * 10, animate: false)
+            RatingView(percentToShow: viewModel.movie.voteAverage * 10, animate: false)
                 .alignmentGuide(.ratingAndPosterHorizontalAlignment) { dimension in
                     dimension[.leading]
                 }
@@ -61,10 +77,10 @@ struct MovieView: View {
     }
 }
 
-struct MovieView_Previews: PreviewProvider {
-    static var previews: some View {
-        ZStack {
-            MovieView(movie: MovieDTOFactory.make()).frame(width: 100, height: 250)
-        }
-    }
-}
+//struct MovieView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        ZStack {
+//            MovieView(movie: MovieDTOFactory.make()).frame(width: 100, height: 250)
+//        }
+//    }
+//}

@@ -9,8 +9,8 @@
 import SwiftUI
 import Combine
 
-class CastViewModel: ObservableObject {
-    @Published var cast: [Cast] = []
+class CastsViewModel: ObservableObject {
+    @Published var castViewModel: [CastViewModel] = []
     
     private var subscriptions = Set<AnyCancellable>()
     
@@ -18,8 +18,8 @@ class CastViewModel: ObservableObject {
         MoviesDBService.shared.getMovieCredits(id: String(movieId))
             .receive(on: DispatchQueue.main)
             .replaceError(with: MovieCredits(id: 0, cast: [], crew: []))
-            .map { $0.cast }
-            .assign(to: \.cast, on: self)
+            .map { movieCredits in movieCredits.cast.map { CastViewModel(cast: $0)}  }
+            .assign(to: \.castViewModel, on: self)
             .store(in: &subscriptions)
     }
 }
@@ -48,14 +48,14 @@ struct CastsView: View {
     
     let padding = EdgeInsets(top: 10, leading: 0, bottom: 10, trailing: 0)
     
-    @ObservedObject var viewModel: CastViewModel
+    @ObservedObject var viewModel: CastsViewModel
     
     var body: some View {
         GeometryReader { reader in
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHStack(alignment: .center, spacing: self.spacing) {
-                    ForEach(self.viewModel.cast, id: \.self) { cast in
-                        return CastView(cast: cast)
+                    ForEach(self.viewModel.castViewModel) { castViewModel in
+                        return CastView(viewModel: castViewModel)
                             .frame(width: self.getProperElementFrame(reader: reader).size.width,
                                    height: self.getProperElementFrame(reader: reader).size.height)
                     }
@@ -74,36 +74,52 @@ struct CastsView: View {
     }
 }
 
-struct CastsView_Previews: PreviewProvider {
-    static var previews: some View {
-        let viewModel = CastViewModel(movieId: 419704)
-        viewModel.cast = [
-            CastFactory.make(character: "Kim Ki-taek", name: "Song Kang-ho", profilePath: nil),
-            CastFactory.make(character: "Park Dong-ik", name: "Lee Sun-kyun", profilePath: nil),
-            CastFactory.make(character: "Yeon-kyo", name: "Cho Yeo-jeong", profilePath: nil),
-            CastFactory.make(character: "Ki-woo", name: "Choi Woo-shik", profilePath: nil),
-            CastFactory.make(character: "Park So-dam", name: "Ki-jung", profilePath: nil),
-            CastFactory.make(character: "Lee Jung-eun", name: "Moon-gwang", profilePath: nil)
-        ]
-        return CastsView(viewModel: viewModel)
+//struct CastsView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        let viewModel = CastsViewModel(movieId: 419704)
+//        viewModel.cast = [
+//            CastFactory.make(character: "Kim Ki-taek", name: "Song Kang-ho", profilePath: nil),
+//            CastFactory.make(character: "Park Dong-ik", name: "Lee Sun-kyun", profilePath: nil),
+//            CastFactory.make(character: "Yeon-kyo", name: "Cho Yeo-jeong", profilePath: nil),
+//            CastFactory.make(character: "Ki-woo", name: "Choi Woo-shik", profilePath: nil),
+//            CastFactory.make(character: "Park So-dam", name: "Ki-jung", profilePath: nil),
+//            CastFactory.make(character: "Lee Jung-eun", name: "Moon-gwang", profilePath: nil)
+//        ]
+//        return CastsView(viewModel: viewModel)
+//    }
+//}
+
+class CastViewModel: ObservableObject, Identifiable {
+    let cast: Cast
+    @ObservedObject var imageLoader: AsynchronousImageLoader
+    
+    var id: Int { cast.id }
+    
+    init(cast: Cast) {
+        self.cast = cast
+        self.imageLoader = AsynchronousImageLoader(imagePath: self.cast.profilePath, size: .medium)
     }
 }
 
 struct CastView: View {
     
-    var cast: Cast
+    var viewModel: CastViewModel
+    
+    init(viewModel: CastViewModel) {
+        self.viewModel = viewModel
+    }
     
     var body: some View {
         GeometryReader { reader in
             VStack(alignment: .leading) {
-                CastImage(imageLoader: AsynchronousImageLoader(imagePath: self.cast.profilePath, size: .medium))
+                CastImage(imageLoader: viewModel.imageLoader)
                     .frame(width: reader.size.width, height: 3/4 * reader.size.height)
                     .clipped()
                 VStack(alignment: .leading, spacing: 1) {
-                    Text(self.cast.name)
+                    Text(viewModel.cast.name)
                         .foregroundColor(.black)
                         .font(.system(size: 10)).bold()
-                    Text(self.cast.character)
+                    Text(viewModel.cast.character)
                         .foregroundColor(.black)
                         .font(.system(size: 10))
                 }
@@ -117,10 +133,10 @@ struct CastView: View {
     }
 }
 
-struct CastView_Previews: PreviewProvider {
-    static var previews: some View {
-        VStack {
-            CastView(cast: CastFactory.make(character: "Kim Ki-taek", name: "Song Kang-ho", profilePath: nil))
-        }
-    }
-}
+//struct CastView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        VStack {
+//            CastView(cast: CastFactory.make(character: "Kim Ki-taek", name: "Song Kang-ho", profilePath: nil))
+//        }
+//    }
+//}
