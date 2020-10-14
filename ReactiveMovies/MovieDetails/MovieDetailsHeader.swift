@@ -22,6 +22,10 @@ extension Date {
     }
 }
 
+class MovieDetailsHeaderValues {
+    var posterPosition: CGRect = .zero
+}
+
 struct PosterFramePreferenceKey: PreferenceKey {
     static var defaultValue: CGRect = CGRect(x: 1, y: 1, width: 1, height: 1)
     
@@ -55,7 +59,7 @@ struct MovieDetailsHeader: View {
     
     var onTapPoster: ((CGRect) -> Void)?
     
-    @State var posterPosition: CGRect = .zero
+    var viewsValues = MovieDetailsHeaderValues()
     
     init(imageLoader: AsynchronousImageLoader, movie: MovieDTO, onTapPoster: ((CGRect) -> Void)? = nil) {
         self.movie = movie
@@ -76,24 +80,13 @@ struct MovieDetailsHeader: View {
                 HStack(alignment: .top) {
                         MoviePosterImage(imageLoader: self.imageLoader)
                             .background(GeometryReader { reader in
-//                                print(reader.frame(in: .named("MovieDetails.main")))
-//                                Print("PRINT WIDTH :\(reader.size.width)")
-//                                Print("PRINT FRAME: : \(reader.frame(in: .named("MovieDetails.main")))")
-//                                Print("PRINT GLOBAL FRAME: : \(reader.frame(in: .global))")
-//                                Print("PRINT LOCAL FRAME: : \(reader.frame(in: .local))")
-//                                ZStack {
-//                                    Print("PRINT LOCAL FRAME: : \(reader.frame(in: .local))")
-//                                }
-//                                Color.clear.preference(key: PosterFramePreferenceKey.self, value: reader.frame(in: .global))
-                                Color.clear.preference(key: PosterFramePreferenceKey.self, value: reader.frame(in: .named("MovieDetails.main")))
-//                                Color.clear.preference(key: PosterFramePreferenceKey.self, value: reader.frame(in:.global))
+                                assignValue(for: reader)
                             })
-                            .onPreferenceChange(PosterFramePreferenceKey.self, perform: {
-                                posterPosition = $0
-                                print("🟢 Preference changed \($0)")
-//                                posterPosition = $0
+                            .onPreferenceChange(PosterFramePreferenceKey.self, perform: { position in
+                                self.viewsValues.posterPosition = position
+                                print("🟢 Preference changed \(position)")
                             }).onTapGesture {
-                                onTapPoster?(posterPosition)
+                                onTapPoster?(viewsValues.posterPosition)
                             }
                         VStack(alignment: .leading) {
                             if let viewModel = viewModel.trailer {
@@ -128,6 +121,12 @@ struct MovieDetailsHeader: View {
         .padding(EdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20))
         .background(MovieDetailsBlurredImage(imageLoader: imageLoader))
         .clipped()
+    }
+    
+    private func assignValue(for reader: GeometryProxy) -> some View {
+        let frame = reader.frame(in: .named("MovieDetails.main"))
+        viewsValues.posterPosition = frame
+        return Color.clear.preference(key: PosterFramePreferenceKey.self, value: frame)
     }
 }
 

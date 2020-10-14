@@ -41,10 +41,6 @@ struct MovieDetails: View {
     
     @State var isShowingContent = false
     
-//    @ObservedObject var posterPosition = PosterPosition()
-    
-//    @ObservedObject var posterPosition = PosterPosition()
-    
     @State var posterPosition = CGRect.zero
     
     @State var startPosterAnimation = false
@@ -61,20 +57,6 @@ struct MovieDetails: View {
     
     init(movie: MovieDTO) {
         self.movie = movie
-//        posterPosition
-//            .objectWillChange
-//            .sink(receiveCompletion: { completion in
-//                switch completion {
-//                case .finished:
-//                    break
-//                case .failure(let error):
-//                    print(error)
-//                }
-//            }, receiveValue: { response in
-//                print(response)
-////                print(self.posterPosition.value)
-//            })
-//        .store(in: &subscriptions)
     }
     
     var body: some View {
@@ -95,64 +77,14 @@ struct MovieDetails: View {
                     Spacer()
                 }
             }
-                Print(posterPosition.origin.x)
-                Print(posterPosition.origin.y)
-//            ZStack(alignment: .topLeading) {
-////                Image(uiImage: UIImage(named: "parasite")!)
-////                    .resizable()
-////                    .aspectRatio(contentMode: .fill)
-////                    .frame(width: 100, height: 150)
-//////                    .frame(width: posterPosition.width, height: posterPosition.height)
-//////                    .offset(x: posterPosition.origin.x, y: posterPosition.origin.y)
-////                    .cornerRadius(8)
-//////                    .animation(.easeInOut(duration: 1.0), value: self.startPosterAnimation)
-////                    .background(Color.red)
-//                Rectangle()
-//                    .frame(width: 100, height: 150, alignment: .topLeading)
-//            }
-//            .frame(width: UIScreen.main.bounds.width, height: 600)
-//            .background(Color.blue)
-//            .background(startPosterAnimation ? Color.blue : nil)
-            
-
-            
-//            MoviePosterImageResizable(imageLoader: AsynchronousImageLoader(imagePath: movie.posterPath, size: .medium))
-//            Image(uiImage: UIImage(named: "parasite")!)
             MoviePosterImageResizable(imageLoader: AsynchronousImageLoader(imagePath: movie.posterPath, size: .medium))
                 .frame(width: posterPosition.width, height: posterPosition.height)
                 .offset(x: posterPosition.origin.x, y: posterPosition.origin.y)
                 .padding(EdgeInsets(top: 0, leading: 0, bottom: posterPosition.origin.y, trailing: posterPosition.origin.x))
                 .clipped()
                 .aspectRatio(contentMode: .fit)
-//                .animation(.easeInOut(duration: 1.0), value: self.startPosterAnimation)
                 .animation(startPosterAnimation ? .default : nil)
-            
-            // working
-//                Rectangle()
-//                    .frame(width: posterPosition.width, height: posterPosition.height)
-//                    .offset(x: posterPosition.origin.x, y: posterPosition.origin.y)
-//                    .animation(.easeInOut(duration: 1.0), value: self.startPosterAnimation)
-            
-            //Partially working with image
-//            Image(uiImage: UIImage(named: "parasite")!)
-////            MoviePosterImageResizable(imageLoader: AsynchronousImageLoader(imagePath: movie.posterPath, size: .medium))
-//                .resizable()
-//                .aspectRatio(contentMode: .fill)
-////                .frame(width: 100, height: 150)
-//                .frame(width: posterPosition.width, height: posterPosition.height)
-//                .offset(x: posterPosition.origin.x, y: posterPosition.origin.y)
-//                .padding(EdgeInsets(top: 0, leading: 0, bottom: posterPosition.origin.y, trailing: posterPosition.origin.x))
-////                .background(Color.red)
-////                .cornerRadius(8)
-//                .animation(.easeInOut(duration: 1.0), value: self.startPosterAnimation)
         }
-//        .alignmentGuide(.top) { _ in
-//
-//        }
-//        .alignmentGuide(.leading) { _ in
-//
-//        }
-//        .onPreferenceChange(PosterFramePreferenceKey.self) { print("FRAME: \($0)") }
         .onPreferenceChange(PosterFramePreferenceKey.self, perform: {
             print("🩸 Preference changed \($0)")
         })
