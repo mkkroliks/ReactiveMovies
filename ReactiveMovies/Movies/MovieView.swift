@@ -9,16 +9,16 @@
 import SwiftUI
 import Combine
 
+struct Constants {
+    static let imageAspectRatio: CGFloat = 1.5
+}
+
 class MovieViewModel: ObservableObject, Identifiable {
     @State var height: CGFloat = 170
+    @ObservedObject var imageLoader: AsynchronousImageLoader
     
     var movie: MovieDTO
-    
-    let imageAspectRatio: CGFloat = 1.5
-    
     var id: Int { movie.id }
-    
-    var imageLoader: AsynchronousImageLoader
     
     init(movie: MovieDTO) {
         self.movie = movie
@@ -61,7 +61,7 @@ struct MovieView: View {
                 Color.white.preference(key: WidthKey.self, value: reader.size.width)
             })
             .onPreferenceChange(WidthKey.self, perform: {
-                viewModel.height = viewModel.imageAspectRatio * ($0 ?? 0)
+                viewModel.height = Constants.imageAspectRatio * ($0 ?? 0)
             })
             .cornerRadius(10)
             .shadow(color: Color.gray.opacity(0.3), radius: 6)

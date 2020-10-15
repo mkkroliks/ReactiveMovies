@@ -28,7 +28,7 @@ class MovieDetailsHeaderValues {
 }
 
 struct PosterFramePreferenceKey: PreferenceKey {
-    static var defaultValue: CGRect = CGRect(x: 1, y: 1, width: 1, height: 1)
+    static var defaultValue: CGRect = .zero
     
     static func reduce(value: inout CGRect, nextValue: () -> CGRect) {
 //        let changed = value + 1

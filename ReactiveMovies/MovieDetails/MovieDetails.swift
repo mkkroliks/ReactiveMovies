@@ -14,7 +14,6 @@ class PosterPosition: ObservableObject {
 }
 
 class MovieDetailsViewModel: ObservableObject {
-    @Published var typedText: String = ""
     var movie: MovieDTO
     
     var releaseDate: String {
@@ -25,10 +24,13 @@ class MovieDetailsViewModel: ObservableObject {
         return "(" + String(calendar.component(.year, from: productionDate)) + ")"
     }
     
+    var viewFrame: CGRect = .zero
+    
     @ObservedObject var headerViewModel: MovieDetailsHeaderViewModel
     @ObservedObject var castViewModel: CastsViewModel
-    
     @ObservedObject var posterResizableImageImageLoader: AsynchronousImageLoader
+    
+    var initialPosterPosition = CGRect.zero
     
     init(movie: MovieDTO) {
         self.movie = movie
@@ -38,12 +40,21 @@ class MovieDetailsViewModel: ObservableObject {
     }
 }
 
+struct MovieDetailsPreferenceKey: PreferenceKey {
+    static var defaultValue: CGRect = .zero
+    
+    static func reduce(value: inout CGRect, nextValue: () -> CGRect) { }
+}
+
 struct MovieDetails: View {
     @State var isShowingContent = false
-    
     @State var posterPosition = CGRect.zero
-    
     @State var startPosterAnimation = false
+    
+    @State var isPosterAnimating = false
+    
+    @State var posterStartPosition = CGRect.zero
+    @State var posterEndPosition = CGRect.zero
     
     @ObservedObject var viewModel: MovieDetailsViewModel
     
@@ -57,15 +68,30 @@ struct MovieDetails: View {
         ZStack(alignment: .topLeading) {
             ScrollView {
                 if isShowingContent {
-                    TextField("Tytuł", text: $viewModel.typedText)
-                    
                     MovieDetailsHeader(viewModel: viewModel.headerViewModel) { posterPosition in
-                        self.posterPosition = posterPosition
-                        self.startPosterAnimation = false
-                        Timer.scheduledTimer(withTimeInterval: 0.05, repeats: false) { (timer) in
-                            self.posterPosition = CGRect(x: 15, y: 15, width: UIScreen.main.bounds.width - 30, height: 500)
-                            self.startPosterAnimation = true
+//                        viewModel.initialPosterPosition = posterPosition
+//                        self.posterPosition = posterPosition
+//                        self.startPosterAnimation = false
+//                        Timer.scheduledTimer(withTimeInterval: 0.01, repeats: false) { (timer) in
+//                            let width = viewModel.viewFrame.width - 30
+//                            let height = width * Constants.imageAspectRatio
+//                            self.posterPosition =  CGRect(x: viewModel.viewFrame.minX + 15, y: viewModel.viewFrame.minY + 15, width: width, height: height)
+//                            self.startPosterAnimation = true
+//                        }
+//                        withAnimation { () -> Result in
+//
+//                        }
+                        
+                        viewModel.initialPosterPosition = posterPosition
+                        posterStartPosition = posterPosition
+                        let width = viewModel.viewFrame.width - 30
+                        let height = width * Constants.imageAspectRatio
+                        self.posterEndPosition =  CGRect(x: viewModel.viewFrame.minX + 15, y: viewModel.viewFrame.minY + 15, width: width, height: height)
+                        
+                        withAnimation(.easeInOut(duration: 1.0)) {
+                            isPosterAnimating = true
                         }
+                        
                     }
                     CastsView(viewModel: viewModel.castViewModel)
                         .frame(height: 200)
@@ -73,14 +99,31 @@ struct MovieDetails: View {
                     Spacer()
                 }
             }
-            MoviePosterImageResizable(imageLoader: viewModel.posterResizableImageImageLoader)
-                .frame(width: posterPosition.width, height: posterPosition.height)
-                .offset(x: posterPosition.origin.x, y: posterPosition.origin.y)
-                .padding(EdgeInsets(top: 0, leading: 0, bottom: posterPosition.origin.y, trailing: posterPosition.origin.x))
-                .clipped()
-                .aspectRatio(contentMode: .fit)
-                .animation(startPosterAnimation ? .default : nil)
+//            MoviePosterImageResizable(imageLoader: viewModel.posterResizableImageImageLoader)
+//                .frame(width: posterPosition.width, height: posterPosition.height)
+//                .offset(x: posterPosition.origin.x, y: posterPosition.origin.y)
+//                .padding(EdgeInsets(top: 0, leading: 0, bottom: posterPosition.origin.y, trailing: posterPosition.origin.x))
+//                .clipped()
+//                .aspectRatio(contentMode: .fit)
+//                .animation(.default)
+//                .onTapGesture {
+//                    posterPosition = viewModel.initialPosterPosition
+//                }
+            
+            MoviePosterImageResizable2(imageLoader: viewModel.posterResizableImageImageLoader, pct: isPosterAnimating ? 1 : 0, startFrame: posterStartPosition, endFrame: posterEndPosition)
+                .onTapGesture {
+                    withAnimation(.easeInOut(duration: 1.0)) {
+                        isPosterAnimating = false
+                    }
+                }
+                
         }
+        .background(GeometryReader { geometry in
+            assignViewFrame(geometry: geometry)
+        })
+        .onPreferenceChange(MovieDetailsPreferenceKey.self, perform: {
+            viewModel.viewFrame = $0
+        })
         .navigationBarTitle(viewModel.movie.title, displayMode: .inline)
         .coordinateSpace(name: "MovieDetails.main")
         .onAppear {
@@ -88,4 +131,8 @@ struct MovieDetails: View {
         }
     }
     
+    private func assignViewFrame(geometry: GeometryProxy) -> some View {
+        viewModel.viewFrame = geometry.frame(in: .named("MovieDetails.main"))
+        return Color.white.preference(key: MovieDetailsPreferenceKey.self, value: viewModel.viewFrame)
+    }
 }
