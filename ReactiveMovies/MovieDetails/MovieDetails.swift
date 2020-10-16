@@ -69,27 +69,14 @@ struct MovieDetails: View {
             ScrollView {
                 if isShowingContent {
                     MovieDetailsHeader(viewModel: viewModel.headerViewModel) { posterPosition in
-//                        viewModel.initialPosterPosition = posterPosition
-//                        self.posterPosition = posterPosition
-//                        self.startPosterAnimation = false
-//                        Timer.scheduledTimer(withTimeInterval: 0.01, repeats: false) { (timer) in
-//                            let width = viewModel.viewFrame.width - 30
-//                            let height = width * Constants.imageAspectRatio
-//                            self.posterPosition =  CGRect(x: viewModel.viewFrame.minX + 15, y: viewModel.viewFrame.minY + 15, width: width, height: height)
-//                            self.startPosterAnimation = true
-//                        }
-//                        withAnimation { () -> Result in
-//
-//                        }
-                        
                         viewModel.initialPosterPosition = posterPosition
-                        posterStartPosition = posterPosition
+                        self.posterPosition = posterPosition
                         let width = viewModel.viewFrame.width - 30
                         let height = width * Constants.imageAspectRatio
-                        self.posterEndPosition =  CGRect(x: viewModel.viewFrame.minX + 15, y: viewModel.viewFrame.minY + 15, width: width, height: height)
                         
-                        withAnimation(.easeInOut(duration: 1.0)) {
+                        withAnimation(.easeInOut(duration: 0.3)) {
                             isPosterAnimating = true
+                            self.posterPosition =  CGRect(x: viewModel.viewFrame.minX + 15, y: viewModel.viewFrame.minY + 15, width: width, height: height)
                         }
                         
                     }
@@ -99,20 +86,14 @@ struct MovieDetails: View {
                     Spacer()
                 }
             }
-//            MoviePosterImageResizable(imageLoader: viewModel.posterResizableImageImageLoader)
-//                .frame(width: posterPosition.width, height: posterPosition.height)
-//                .offset(x: posterPosition.origin.x, y: posterPosition.origin.y)
-//                .padding(EdgeInsets(top: 0, leading: 0, bottom: posterPosition.origin.y, trailing: posterPosition.origin.x))
-//                .clipped()
-//                .aspectRatio(contentMode: .fit)
-//                .animation(.default)
-//                .onTapGesture {
-//                    posterPosition = viewModel.initialPosterPosition
-//                }
             
-            MoviePosterImageResizable2(imageLoader: viewModel.posterResizableImageImageLoader, pct: isPosterAnimating ? 1 : 0, startFrame: posterStartPosition, endFrame: posterEndPosition)
+            MoviePosterImageResizable(
+                imageLoader: viewModel.posterResizableImageImageLoader,
+                pct: isPosterAnimating ? 1 : 0, frame: posterPosition
+            )
                 .onTapGesture {
-                    withAnimation(.easeInOut(duration: 1.0)) {
+                    withAnimation(.easeInOut(duration: 0.3)) {
+                        posterPosition = viewModel.initialPosterPosition
                         isPosterAnimating = false
                     }
                 }

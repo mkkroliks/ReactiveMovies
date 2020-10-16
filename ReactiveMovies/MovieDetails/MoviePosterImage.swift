@@ -11,78 +11,42 @@ import SwiftUI
 struct MoviePosterImageResizable: View {
     @ObservedObject var imageLoader: AsynchronousImageLoader
     
-//    init(imageLoader: AsynchronousImageLoader, onTap: () -> ()) {
-//        
-//    }
-    
-    var body: some View {
-        HStack {
-            if let image = imageLoader.image {
-                Image(uiImage: image)
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-            } else {
-                EmptyView()
-            }
-        }
-        
-    }
-}
-
-struct MoviePosterImageResizable2: View {
-    @ObservedObject var imageLoader: AsynchronousImageLoader
-    
     let pct: Double
-    let startFrame: CGRect
-    let endFrame: CGRect
+    let frame: CGRect
+    let backgroundFrame: CGRect
     
-    init(imageLoader: AsynchronousImageLoader, pct: Double, startFrame: CGRect, endFrame: CGRect) {
+    init(imageLoader: AsynchronousImageLoader, pct: Double, frame: CGRect, backgroundFrame: CGRect) {
         self.imageLoader = imageLoader
         self.pct = pct
-        self.startFrame = startFrame
-        self.endFrame = endFrame
+        self.frame = frame
+        self.backgroundFrame = backgroundFrame
     }
     
     struct MoviePosterModifier: AnimatableModifier {
-        var pct: CGFloat = 0
-        var startFrame: CGRect = .zero
-        var endFrame: CGRect = .zero
-        
-//        init(pct: CGFloat = 0, startFrame: CGRect = .zero, endFrame: CGRect = .zero) {
-//            self.pct = pct
-//            self.startFrame = startFrame
-//            self.endFrame = endFrame
-//        }
-        
-        var animatableData: CGFloat {
-            get { pct }
-            set { pct = newValue }
+        var pct: CGFloat
+        var frame: CGRect
+                        
+        var animatableData: AnimatablePair<CGFloat, CGRect.AnimatableData> {
+            get { AnimatablePair(pct, frame.animatableData) }
+            set {
+                pct = newValue.first
+                frame = CGRect(
+                    x: newValue.second.first.first,
+                    y: newValue.second.first.second,
+                    width: newValue.second.second.first,
+                    height: newValue.second.second.second
+                )
+            }
         }
         
         func body(content: Content) -> some View {
             content
-                .frame(width: posterWidth, height: posterHeight)
-                .offset(x: posterX, y: posterY)
-                .padding(EdgeInsets(top: 0, leading: 0, bottom: posterY, trailing: posterX))
+                .frame(width: frame.width, height: frame.height)
+                .offset(x: frame.minX, y: frame.minY)
+                .padding(EdgeInsets(top: 0, leading: 0, bottom: frame.minY, trailing: frame.minX))
                 .clipped()
                 .aspectRatio(contentMode: .fit)
                 .opacity((pct == 0) ? 0 : 1)
-        }
-        
-        private var posterWidth: CGFloat {
-            return startFrame.width + (endFrame.width - startFrame.width) * pct
-        }
-        
-        private var posterHeight: CGFloat {
-            return startFrame.height + (endFrame.height - startFrame.height) * pct
-        }
-        
-        private var posterX: CGFloat {
-            startFrame.minX + (endFrame.minX - startFrame.minX) * pct
-        }
-        
-        private var posterY: CGFloat {
-            startFrame.minY + (endFrame.minY - startFrame.minY) * pct
         }
     }
     
@@ -98,7 +62,7 @@ struct MoviePosterImageResizable2: View {
                 EmptyView()
             }
         }
-        .modifier(MoviePosterModifier(pct: CGFloat(pct), startFrame: startFrame, endFrame: endFrame))
+        .modifier(MoviePosterModifier(pct: CGFloat(pct), frame: frame))
     }
 }
 
