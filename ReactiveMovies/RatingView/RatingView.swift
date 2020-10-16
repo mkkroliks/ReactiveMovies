@@ -45,7 +45,7 @@ struct RatingView: View {
         }
         .frame(width:40, height: 40)
         .onAppear {
-            withAnimation(.easeInOut(duration: animate ? 1.0 : 0.0)) {
+            withAnimation(animate ? .easeInOut(duration: 1.0) : nil) {
                 guard let percent = self.percentToShow else {
                     return
                 }

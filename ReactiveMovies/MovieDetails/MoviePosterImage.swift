@@ -13,13 +13,11 @@ struct MoviePosterImageResizable: View {
     
     let pct: Double
     let frame: CGRect
-    let backgroundFrame: CGRect
     
-    init(imageLoader: AsynchronousImageLoader, pct: Double, frame: CGRect, backgroundFrame: CGRect) {
+    init(imageLoader: AsynchronousImageLoader, pct: Double, frame: CGRect) {
         self.imageLoader = imageLoader
         self.pct = pct
         self.frame = frame
-        self.backgroundFrame = backgroundFrame
     }
     
     struct MoviePosterModifier: AnimatableModifier {

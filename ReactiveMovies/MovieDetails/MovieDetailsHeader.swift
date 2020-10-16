@@ -30,17 +30,7 @@ class MovieDetailsHeaderValues {
 struct PosterFramePreferenceKey: PreferenceKey {
     static var defaultValue: CGRect = .zero
     
-    static func reduce(value: inout CGRect, nextValue: () -> CGRect) {
-//        let changed = value + 1
-//        let changedValue = value
-//        value = CGRect(x: value.minX + 1, y: value.minY + 1, width: value.width, height: value.height)
-//        value = changedValue
-//        value = nextValue()
-//        let newValue = nextValue()
-//        value = newValue
-    }
-    
-//    typealias Value = CGRect
+    static func reduce(value: inout CGRect, nextValue: () -> CGRect) {}
 }
 
 class MovieDetailsHeaderViewModel: ObservableObject {
