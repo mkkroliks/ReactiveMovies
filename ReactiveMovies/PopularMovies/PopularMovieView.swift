@@ -8,21 +8,21 @@
 
 import SwiftUI
 
-struct PopularMovieView: View {
-    
-    let movie: MovieDTO
-    
-    var body: some View {
-        
-        HStack(alignment: .center) {
-            VStack(alignment: .leading, spacing: 10) {
-                Text(movie.title)
-                Text(movie.overview)
-                    .font(.subheadline)
-                    .foregroundColor(.gray)
-                
-            }
-            PopularMovieImageView(imageLoader: ImageLoadersCache.share.create(imagePath: movie.posterPath, size: .small))
-        }
-    }
-}
+//struct PopularMovieView: View {
+//    
+//    let movie: MovieDTO
+//    
+//    var body: some View {
+//        
+//        HStack(alignment: .center) {
+//            VStack(alignment: .leading, spacing: 10) {
+//                Text(movie.title)
+//                Text(movie.overview)
+//                    .font(.subheadline)
+//                    .foregroundColor(.gray)
+//                
+//            }
+//            PopularMovieImageView(imageLoader: ImageLoadersCache.share.create(imagePath: movie.posterPath, size: .small))
+//        }
+//    }
+//}

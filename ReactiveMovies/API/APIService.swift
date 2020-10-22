@@ -59,11 +59,14 @@ struct APIService {
         case movieCredits(id: String)
         case movieVideos(id: String)
         case searchMovie
+        case topRated
         
         var path: String {
             switch self {
             case .popular:
                 return "movie/popular"
+            case .topRated:
+                return "movie/top_rated"
             case .movieCredits(let id):
                 return "movie/\(id)/credits"
             case .movieVideos(let id):

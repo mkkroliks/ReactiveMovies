@@ -54,6 +54,9 @@ class MovieDetailsHeaderViewModel: ObservableObject {
     init(movie: MovieDTO) {
         imageLoader =  AsynchronousImageLoader(imagePath: movie.posterPath, size: .medium)
         self.movie = movie
+    }
+    
+    func fetchData() {
         MoviesDBService.shared.getMovieVideos(id: String(movie.id))
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
@@ -123,7 +126,7 @@ struct MovieDetailsHeader: View {
                                 .font(Font.caption)
                             HStack {
                                 RatingView(percentToShow: viewModel.movie.voteAverage * 10)
-                                Text("User\nScore")
+                                Text("Users\nScore")
                                     .foregroundColor(.white)
                                     .font(Font.caption.bold())
                             }

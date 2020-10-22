@@ -99,7 +99,11 @@ struct AnimatableGradient: AnimatableModifier {
 
 struct SegmentedControllView: View {
 
-    @State private var selectedIndex: Int = 0
+    @State private var selectedIndex: Int = 0 {
+        didSet {
+            wer.wrappedValue = selectedIndex
+        }
+    }
 
     @State private var w: [CGFloat] = [0, 0, 0, 0]
 
@@ -111,6 +115,12 @@ struct SegmentedControllView: View {
 
     let gradient1: [UIColor] = [.black, .black]
     let gradient2: [UIColor] = [UIColor(named: "SegmentedControlGradientStart")!, UIColor(named: "SegmentedControlGradientEnd")!]
+    
+    var wer: Binding<Int>
+    
+    init(value: Binding<Int>) {
+        self.wer = value
+    }
 
     var body: some View {
         ZStack(alignment: .myAlignment) {
@@ -231,7 +241,7 @@ struct SegmentedControllView_Previews: PreviewProvider {
 //        }
         VStack {
 //            GradientText()
-            SegmentedControllView()
+//            SegmentedControllView(value: <#Binding<Int>#>)
         }
 
     }

@@ -38,6 +38,11 @@ class MovieDetailsViewModel: ObservableObject {
         self.castViewModel = CastsViewModel(movieId: movie.id)
         self.posterResizableImageImageLoader = AsynchronousImageLoader(imagePath: movie.posterPath, size: .medium)
     }
+    
+    func fetchData() {
+        headerViewModel.fetchData()
+        castViewModel.fetchMovieCredits()
+    }
 }
 
 struct MovieDetailsPreferenceKey: PreferenceKey {
@@ -109,6 +114,7 @@ struct MovieDetails: View {
         .coordinateSpace(name: "MovieDetails.main")
         .onAppear {
             self.isShowingContent = true
+            viewModel.fetchData()
         }
     }
     

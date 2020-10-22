@@ -14,7 +14,13 @@ class CastsViewModel: ObservableObject {
     
     private var subscriptions = Set<AnyCancellable>()
     
+    private let movieId: Int
+    
     init(movieId: Int) {
+        self.movieId = movieId
+    }
+    
+    func fetchMovieCredits() {
         MoviesDBService.shared.getMovieCredits(id: String(movieId))
             .receive(on: DispatchQueue.main)
             .replaceError(with: MovieCredits(id: 0, cast: [], crew: []))
@@ -34,7 +40,11 @@ struct CastImage: View {
                     .resizable()
                     .aspectRatio(contentMode: .fill)
             } else {
-                Rectangle()
+                ZStack(alignment: .center) {
+                    Image(systemName: "person.fill")
+                        .font(.system(size: 60))
+                        .foreground(Color.gray)
+                }
             }
         }.clipped()
     }

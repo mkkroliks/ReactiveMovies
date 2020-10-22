@@ -17,47 +17,45 @@ struct PopularMovies: View {
     
     @ObservedObject var viewModel = PopularMoviesSectionViewModel()
     
+    var numberOfElementsInRow = 3
+    
+    let layout = [
+        GridItem(.adaptive(minimum: 105), spacing: 15)
+    ]
+    
+    var elementCount = 0
+    var currentRow = 0
+    
     var body: some View {
-
         NavigationView {
-            List {
-                Section {
-                    HStack {
-                        Spacer()
-                        SegmentedControllView()
-                        Spacer()
+            ScrollView {
+                Divider()
+                MoviesSeachTextField(typedText: viewModel.$typedText.value)
+                    .padding(EdgeInsets(top: 5, leading: 20, bottom: 5, trailing: 20))
+                Divider()
+                HStack {
+                    SegmentedControllView(value: $viewModel.selectedSegmentedControlerItem)
+                    Spacer()
+                }
+                .padding(EdgeInsets(top: 5, leading: 20, bottom: 5, trailing: 20))
+                Divider()
+                LazyVGrid(columns: layout, spacing: 20) {
+                    ForEach(viewModel.moviesViewModels) { cellViewModel in
+                        NavigationLink(destination: MovieDetails(movie: cellViewModel.movie)) {
+                            MovieView(viewModel: cellViewModel)
+                        }.buttonStyle(PlainButtonStyle())
                     }
-                }
-                Section {
-                    SeachTextField(typedText: viewModel.$typedText.value)
-                }
-                Section {
-                    MoviesSection(viewModel: viewModel)
-                }
-                if viewModel.movies.isEmpty == false {
                     Rectangle()
                         .foregroundColor(.clear)
                         .onAppear {
-                            if !self.viewModel.movies.isEmpty, !self.viewModel.isSearching {
+                            if !self.viewModel.moviesViewModels.isEmpty, !self.viewModel.isSearching {
                                 self.viewModel.fetchNextPage()
                             }
                         }
                 }
+                .padding(EdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20))
             }
-            .navigationBarTitle(Text("Popular Movies"))
-        }
-    }
-}
-
-struct MoviesSection: View {
-        
-    @ObservedObject var viewModel: PopularMoviesSectionViewModel
-    
-    var body: some View {
-        ForEach(viewModel.movies) { movie in
-            NavigationLink(destination: MovieDetails(movie: movie)) {
-                PopularMovieView(movie: movie)
-            }
+            .navigationBarTitle(Text("Movies"), displayMode: .large)
         }
     }
 }
