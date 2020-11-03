@@ -36,7 +36,7 @@ class MovieDetailsViewModel: ObservableObject {
         self.movie = movie
         self.headerViewModel = MovieDetailsHeaderViewModel(movie: movie)
         self.castViewModel = CastsViewModel(movieId: movie.id)
-        self.posterResizableImageImageLoader = AsynchronousImageLoader(imagePath: movie.posterPath, size: .medium)
+        self.posterResizableImageImageLoader = ImageLoadersCache.share.create(imagePath: movie.posterPath, size: .medium)
     }
     
     func fetchData() {

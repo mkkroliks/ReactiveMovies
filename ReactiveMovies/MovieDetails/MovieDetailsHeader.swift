@@ -52,7 +52,7 @@ class MovieDetailsHeaderViewModel: ObservableObject {
     let movie: MovieDTO
     
     init(movie: MovieDTO) {
-        imageLoader =  AsynchronousImageLoader(imagePath: movie.posterPath, size: .medium)
+        imageLoader =  ImageLoadersCache.share.create(imagePath: movie.posterPath, size: .medium)
         self.movie = movie
     }
     

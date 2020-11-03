@@ -107,7 +107,7 @@ class CastViewModel: ObservableObject, Identifiable {
     
     init(cast: Cast) {
         self.cast = cast
-        self.imageLoader = AsynchronousImageLoader(imagePath: self.cast.profilePath, size: .medium)
+        self.imageLoader = ImageLoadersCache.share.create(imagePath: cast.profilePath, size: .medium)
     }
 }
 

@@ -264,7 +264,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "8FBBBFC7-BE8A-40C8-BC4B-71FD4CDA368C"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "ReactiveMovies/API/ImageFetcherService.swift"
@@ -520,7 +520,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "E11854E6-DE3C-4D54-8D9C-F48C0568CB4F"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "ReactiveMovies/API/ImageFetcherService.swift"
@@ -536,7 +536,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "FA2D0FEC-5D22-4EB9-94DD-6E699FF59812"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "ReactiveMovies/API/ImageFetcherService.swift"
@@ -552,7 +552,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "B8837FA0-E725-4AA7-B1DE-87D4453A8921"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "ReactiveMovies/API/ImageFetcherService.swift"
@@ -567,24 +567,8 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "2EF1B00A-427D-4913-AD40-B410FBF41922"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "ReactiveMovies/API/ImageFetcherService.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "66"
-            endingLineNumber = "66"
-            landmarkName = "init(imagePath:size:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "4ECE5538-7745-46E9-A0C3-AFB1C586E4A8"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "ReactiveMovies/API/ImageFetcherService.swift"
@@ -593,22 +577,6 @@
             startingLineNumber = "79"
             endingLineNumber = "79"
             landmarkName = "loadImage()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "EE5085F0-EB8B-481C-AC43-521A1C40EB5F"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "ReactiveMovies/API/ImageFetcherService.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "69"
-            endingLineNumber = "69"
-            landmarkName = "init(imagePath:size:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -626,38 +594,22 @@
             endingLineNumber = "71"
             landmarkName = "init(imagePath:size:)"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "00E98713-D126-4678-A0EE-DD52C072F679 - 8e42ece1b0178eaf"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "ReactiveMovies.AsynchronousImageLoader.init(imagePath: Swift.Optional&lt;Swift.String&gt;, size: ReactiveMovies.ImageFetcherService.Size) -&gt; ReactiveMovies.AsynchronousImageLoader"
-                  moduleName = "ReactiveMovies"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/maciej.krolikowski/testowe_projekty/ReactiveMovies/ReactiveMovies/API/ImageFetcherService.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "72"
-                  endingLineNumber = "72"
-                  offsetFromSymbolStart = "908">
-               </Location>
-               <Location
-                  uuid = "00E98713-D126-4678-A0EE-DD52C072F679 - 952804e97b409975"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Combine.Subscription) -&gt; () in ReactiveMovies.AsynchronousImageLoader.init(imagePath: Swift.Optional&lt;Swift.String&gt;, size: ReactiveMovies.ImageFetcherService.Size) -&gt; ReactiveMovies.AsynchronousImageLoader"
-                  moduleName = "ReactiveMovies"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/maciej.krolikowski/testowe_projekty/ReactiveMovies/ReactiveMovies/API/ImageFetcherService.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "72"
-                  endingLineNumber = "72"
-                  offsetFromSymbolStart = "47">
-               </Location>
-            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "2ACB8D83-7845-4234-8F9B-581DEEE0BF08"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ReactiveMovies/API/ImageFetcherService.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "85"
+            endingLineNumber = "85"
+            landmarkName = "deinit"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

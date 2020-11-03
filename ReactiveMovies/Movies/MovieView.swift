@@ -22,7 +22,7 @@ class MovieViewModel: ObservableObject, Identifiable {
     
     init(movie: MovieDTO) {
         self.movie = movie
-        self.imageLoader = AsynchronousImageLoader(imagePath: movie.posterPath, size: .movie)
+        self.imageLoader = ImageLoadersCache.share.create(imagePath: movie.posterPath, size: .movie)
     }
 }
 
