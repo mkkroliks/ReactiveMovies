@@ -109,7 +109,7 @@ struct SegmentedControllView: View {
 
     @State private var height: CGFloat = 0
 
-    var categories: [String] = ["Streaming", "On TV", "In theaters"]
+    var categories: [String] = ["Now Playing", "Upcoming", "Top Rated"]
     
     @State var isGradient = true
 

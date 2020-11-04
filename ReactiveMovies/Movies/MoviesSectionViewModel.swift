@@ -121,7 +121,9 @@ final class MoviesSectionViewModel: ObservableObject {
     private func getPublisherForSelectedCategory(index: Int, page: Int) -> AnyPublisher<PaginatedResponse<MovieDTO>, APIService.APIError> {
         switch index {
         case 0:
-            return MoviesDBService.shared.getPopular(page: page)
+            return MoviesDBService.shared.getNowPlaying(page: page)
+        case 1:
+            return MoviesDBService.shared.getUpcoming(page: page)
         default:
             return MoviesDBService.shared.getTopRatedMovies(page: page)
         }

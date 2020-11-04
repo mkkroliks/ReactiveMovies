@@ -60,6 +60,8 @@ struct APIService {
         case movieVideos(id: String)
         case searchMovie
         case topRated
+        case nowPlaying
+        case upcoming
         
         var path: String {
             switch self {
@@ -73,6 +75,10 @@ struct APIService {
                 return "movie/\(id)/videos"
             case .searchMovie:
                 return "/search/movie"
+            case .nowPlaying:
+                return "/movie/now_playing"
+            case .upcoming:
+                return "/movie/upcoming"
             }
         }
     }

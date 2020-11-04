@@ -110,6 +110,14 @@ struct MoviesDBService {
         APIService.shared.get(endpoint: .topRated, params: ["page": "\(page)"])
     }
     
+    func getNowPlaying(page: Int) -> AnyPublisher<PaginatedResponse<MovieDTO>, APIService.APIError> {
+        APIService.shared.get(endpoint: .nowPlaying, params: ["page": "\(page)"])
+    }
+    
+    func getUpcoming(page: Int) -> AnyPublisher<PaginatedResponse<MovieDTO>, APIService.APIError> {
+        APIService.shared.get(endpoint: .upcoming, params: ["page": "\(page)"])
+    }
+    
     func getMovieCredits(id: String) -> AnyPublisher<MovieCredits, APIService.APIError> {
         return APIService.shared.get(endpoint: .movieCredits(id: id))
     }
