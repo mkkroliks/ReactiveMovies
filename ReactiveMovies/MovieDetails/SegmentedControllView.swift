@@ -105,11 +105,11 @@ struct SegmentedControllView: View {
         }
     }
 
-    @State private var w: [CGFloat] = [0, 0, 0, 0]
+    @State private var w: [CGFloat] = [0, 0, 0]
 
     @State private var height: CGFloat = 0
 
-    var categories: [String] = ["Streaming", "On TV", "For Rent", "In theaters"]
+    var categories: [String] = ["Streaming", "On TV", "In theaters"]
     
     @State var isGradient = true
 

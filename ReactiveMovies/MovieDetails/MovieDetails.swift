@@ -85,9 +85,14 @@ struct MovieDetails: View {
                         }
                         
                     }
+                    HStack {
+                        Text("Cast")
+                            .padding(.leading, 15)
+                            .font(Font.headline.bold())
+                        Spacer()
+                    }
                     CastsView(viewModel: viewModel.castViewModel)
                         .frame(height: 200)
-                    Text("Move details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\nMove details\n")
                     Spacer()
                 }
             }

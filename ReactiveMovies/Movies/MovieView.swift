@@ -9,23 +9,6 @@
 import SwiftUI
 import Combine
 
-struct Constants {
-    static let imageAspectRatio: CGFloat = 1.5
-}
-
-class MovieViewModel: ObservableObject, Identifiable {
-    @State var height: CGFloat = 170
-    @ObservedObject var imageLoader: AsynchronousImageLoader
-    
-    var movie: MovieDTO
-    var id: Int { movie.id }
-    
-    init(movie: MovieDTO) {
-        self.movie = movie
-        self.imageLoader = ImageLoadersCache.share.create(imagePath: movie.posterPath, size: .movie)
-    }
-}
-
 struct MovieView: View {
     @ObservedObject var viewModel: MovieViewModel
     
@@ -75,6 +58,37 @@ struct MovieView: View {
                 }
         }
     }
+}
+
+private struct WidthKey: PreferenceKey {
+    static let defaultValue: CGFloat? = nil
+    static func reduce(value: inout CGFloat?, nextValue: () -> CGFloat?) {
+        value = value ?? nextValue()
+    }
+}
+
+private extension VerticalAlignment {
+    enum RatingAndPoster: AlignmentID {
+        static func defaultValue(in context: ViewDimensions) -> CGFloat {
+            context[.top]
+        }
+    }
+
+    static let ratingAndPosterVerticalAlignment = VerticalAlignment(RatingAndPoster.self)
+}
+
+private extension HorizontalAlignment {
+    enum RatingAndPoster: AlignmentID {
+        static func defaultValue(in context: ViewDimensions) -> CGFloat {
+            context[.leading]
+        }
+    }
+
+    static let ratingAndPosterHorizontalAlignment = HorizontalAlignment(RatingAndPoster.self)
+}
+
+private extension Alignment {
+    static let ratingAndPosterAlignment = Alignment(horizontal: .ratingAndPosterHorizontalAlignment, vertical: .ratingAndPosterVerticalAlignment)
 }
 
 //struct MovieView_Previews: PreviewProvider {

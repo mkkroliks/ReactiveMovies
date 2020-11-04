@@ -13,9 +13,9 @@ class TypedText: ObservableObject {
     @Published var value: String = ""
 }
 
-struct PopularMovies: View {
+struct MoviesView: View {
     
-    @ObservedObject var viewModel = PopularMoviesSectionViewModel()
+    @ObservedObject var viewModel = MoviesSectionViewModel()
     
     var numberOfElementsInRow = 3
     
@@ -75,6 +75,6 @@ struct SeachTextField: View {
 
 struct PopularMovies_Previews: PreviewProvider {
     static var previews: some View {
-        PopularMovies()
+        MoviesView()
     }
 }
