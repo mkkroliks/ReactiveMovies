@@ -162,38 +162,6 @@
             endingLineNumber = "43"
             landmarkName = "transformGridPreferences(preference:size:)"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "08EAED1B-31E4-42A5-8F6B-F2B71E98C35A - 1b0e02b6a0dbe4d2"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "ReactiveMovies.GridConfig.transformGridPreferences(preference: inout ReactiveMovies.GridPreferences, size: __C.CGSize) -&gt; ()"
-                  moduleName = "ReactiveMovies"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/maciej.krolikowski/testowe_projekty/ReactiveMovies/ReactiveMovies/MovieDetails/GridView.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "43"
-                  endingLineNumber = "43"
-                  offsetFromSymbolStart = "1695">
-               </Location>
-               <Location
-                  uuid = "08EAED1B-31E4-42A5-8F6B-F2B71E98C35A - 4ab7e101b7ff19c4"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Swift.Int, ReactiveMovies.GridPreferences.Item) -&gt; () in ReactiveMovies.GridConfig.transformGridPreferences(preference: inout ReactiveMovies.GridPreferences, size: __C.CGSize) -&gt; ()"
-                  moduleName = "ReactiveMovies"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/maciej.krolikowski/testowe_projekty/ReactiveMovies/ReactiveMovies/MovieDetails/GridView.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "46"
-                  endingLineNumber = "46"
-                  offsetFromSymbolStart = "378">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -270,8 +238,8 @@
             filePath = "ReactiveMovies/MovieDetails/SegmentedControllView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "214"
-            endingLineNumber = "214"
+            startingLineNumber = "171"
+            endingLineNumber = "171"
             landmarkName = "body"
             landmarkType = "24">
          </BreakpointContent>
@@ -535,49 +503,123 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "4ECE5538-7745-46E9-A0C3-AFB1C586E4A8"
+            uuid = "C964741A-7A12-4D34-AF22-07A04A0F5D53"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ReactiveMovies/SegmentedControl/SegmentedControllView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "74"
+            endingLineNumber = "74"
+            landmarkName = "createTextView(for:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "79462C70-5620-46C8-A350-B1950D201550"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ReactiveMovies/SegmentedControl/SegmentedControllView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "69"
+            endingLineNumber = "69"
+            landmarkName = "createTextView(for:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "E55F1906-2ADA-442B-BF12-E2EB5D125EC0"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ReactiveMovies/SegmentedControl/SegmentedControllView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "86"
+            endingLineNumber = "86"
+            landmarkName = "createTextView(for:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "6922D3E2-CE8A-45AF-B4C4-3092FAE5FE89"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ReactiveMovies/SegmentedControl/SegmentedControllView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "137"
+            endingLineNumber = "137"
+            landmarkName = "reduce(value:nextValue:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "31D080E3-ED91-44C5-9F9F-C45B2B0B2016"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ReactiveMovies/SegmentedControl/SegmentedControllView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "126"
+            endingLineNumber = "126"
+            landmarkName = "reduce(value:nextValue:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "D7D17939-98FC-4C01-BFE7-81630C806D75"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ReactiveMovies/Movies/MoviesView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "241"
+            endingLineNumber = "241">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "F566F5D8-D888-468B-92FA-CC36C05A98BF"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "ReactiveMovies/API/ImageFetcherService.swift"
+            filePath = "ReactiveMovies/Movies/MoviesView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "79"
-            endingLineNumber = "79"
-            landmarkName = "loadImage()"
-            landmarkType = "7">
+            startingLineNumber = "245"
+            endingLineNumber = "245">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "00E98713-D126-4678-A0EE-DD52C072F679"
+            uuid = "89B4D67C-1DAF-4DDC-9844-415EE00DE841"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "ReactiveMovies/API/ImageFetcherService.swift"
+            filePath = "ReactiveMovies/Movies/MoviesView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "71"
-            endingLineNumber = "71"
-            landmarkName = "init(imagePath:size:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "2ACB8D83-7845-4234-8F9B-581DEEE0BF08"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "ReactiveMovies/API/ImageFetcherService.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "85"
-            endingLineNumber = "85"
-            landmarkName = "deinit"
-            landmarkType = "7">
+            startingLineNumber = "235"
+            endingLineNumber = "235">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

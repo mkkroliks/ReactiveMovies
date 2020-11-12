@@ -23,11 +23,6 @@ final class MoviesSectionViewModel: ObservableObject {
     
     @Published var searchedMovie: [MovieDTO] = []
     
-//    var selectedSegmentedControlerItem: Binding<Int> = Binding<Int>(0) {
-//        didSet {
-//            fetchSelectedCategory()
-//        }
-//    }
     @Published var selectedSegmentedControlerItem: Int = 0
     
     var isSearching: Bool {
@@ -72,27 +67,6 @@ final class MoviesSectionViewModel: ObservableObject {
             }
             .assign(to: \.moviesViewModels, on: self)
             .store(in: &subscriptions)
-        
-//        $selectedSegmentedControlerItem
-//            .flatMap { (item) -> AnyPublisher<PaginatedResponse<MovieDTO>, APIService.APIError> in
-//                self.currentPage = 1
-//                return  self.getPublisherForSelectedCategory(index: item)
-//            }
-//            .receive(on: DispatchQueue.main)
-//            .sink(receiveCompletion: { completion in
-//                switch completion {
-//                case .finished:
-//                    break
-//                case .failure(let error):
-//                    print(error)
-//                }
-//            }, receiveValue: { response in
-//                let currentMoviesIds = self.fetchedData.map { $0.id }
-//                self.fetchedData += response.results.filter { !currentMoviesIds.contains($0.id) }
-//                self.currentPage = response.page ?? 0
-//                self.moviesViewModels = self.fetchedData.map { MovieViewModel(movie: $0) }
-//            })
-//        .store(in: &subscriptions)
     }
     
     func fetchNextPage() {

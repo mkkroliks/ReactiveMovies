@@ -8,96 +8,7 @@
 
 import SwiftUI
 
-struct WidthPreferenceKey: PreferenceKey {
-    static var defaultValue = CGFloat(0)
-
-    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
-        let newValue = nextValue()
-        value = newValue
-    }
-
-    typealias Value = CGFloat
-}
-
-struct HeightPreferenceKey: PreferenceKey {
-    static var defaultValue = CGFloat(0)
-
-    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
-        value = nextValue()
-    }
-
-    typealias Value = CGFloat
-}
-
-
-extension VerticalAlignment {
-    private enum MyVerticalAlignment : AlignmentID {
-        static func defaultValue(in d: ViewDimensions) -> CGFloat {
-            return d[VerticalAlignment.center]
-        }
-    }
-    
-    static let myVerticalAlignment = VerticalAlignment(MyVerticalAlignment.self)
-}
-
-extension HorizontalAlignment {
-    private enum MyHorizontalAlignment : AlignmentID {
-        static func defaultValue(in d: ViewDimensions) -> CGFloat {
-            return d[HorizontalAlignment.center]
-        }
-    }
-    
-    static let myHorizontalAlignment = HorizontalAlignment(MyHorizontalAlignment.self)
-}
-
-extension Alignment {
-    static let myAlignment = Alignment(horizontal: .myHorizontalAlignment, vertical: .myVerticalAlignment)
-}
-
-struct AnimatableGradient: AnimatableModifier {
-    let from: [UIColor]
-    let to: [UIColor]
-    var pct: CGFloat = 0
-    
-    var animatableData: CGFloat {
-        get { pct }
-        set { pct = newValue }
-    }
-    
-    func body(content: Content) -> some View {
-        var gColors = [Color]()
-        
-        for i in 0..<from.count {
-            gColors.append(colorMixer(c1: from[i], c2: to[i], pct: pct))
-        }
-        
-        return LinearGradient(gradient: Gradient(colors: gColors),
-                              startPoint: UnitPoint(x: 0, y: 0),
-                              endPoint: UnitPoint(x: 1, y: 1))
-    }
-    
-
-    func colorMixer(c1: UIColor, c2: UIColor, pct: CGFloat) -> Color {
-        guard var cc1 = c1.cgColor.components else { return Color(c1) }
-        guard var cc2 = c2.cgColor.components else { return Color(c1) }
-        
-        if cc1.count < 3 {
-            cc1 = [cc1[0]*255, cc1[0]*255, cc1[0]*255, cc1[1]]
-        }
-        
-        if cc2.count < 3 {
-            cc2 = [cc2[0]*255, cc2[0]*255, cc2[0]*255, cc2[1]]
-        }
-        
-        let r = (cc1[0] + (cc2[0] - cc1[0]) * pct)
-        let g = (cc1[1] + (cc2[1] - cc1[1]) * pct)
-        let b = (cc1[2] + (cc2[2] - cc1[2]) * pct)
-        
-        return Color(red: Double(r), green: Double(g), blue: Double(b))
-    }
-}
-
-struct SegmentedControllView: View {
+struct SegmentedControlView: View {
 
     @State private var selectedIndex: Int = 0 {
         didSet {
@@ -188,6 +99,73 @@ struct SegmentedControllView: View {
     }
 }
 
+struct SelectedItemPreferencesModifier: View {
+    var body: some View {
+        GeometryReader { geometry in
+            Color.clear
+                .preference(key: WidthPreferenceKey.self, value: geometry.size.width)
+                .preference(key: HeightPreferenceKey.self, value: geometry.size.height)
+        }
+    }
+}
+
+struct NotSelectedItemPreferencesModifier: View {
+    var body: some View {
+        GeometryReader { geometry in
+            Color.clear
+                .preference(key: WidthPreferenceKey.self, value: geometry.size.width)
+        }
+    }
+}
+
+
+struct WidthPreferenceKey: PreferenceKey {
+    static var defaultValue = CGFloat(0)
+
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        let newValue = nextValue()
+        value = newValue
+    }
+
+    typealias Value = CGFloat
+}
+
+struct HeightPreferenceKey: PreferenceKey {
+    static var defaultValue = CGFloat(0)
+
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        let newValue = nextValue()
+        value = newValue
+    }
+
+    typealias Value = CGFloat
+}
+
+
+extension VerticalAlignment {
+    private enum MyVerticalAlignment : AlignmentID {
+        static func defaultValue(in d: ViewDimensions) -> CGFloat {
+            return d[VerticalAlignment.center]
+        }
+    }
+    
+    static let myVerticalAlignment = VerticalAlignment(MyVerticalAlignment.self)
+}
+
+private extension HorizontalAlignment {
+    private enum MyHorizontalAlignment : AlignmentID {
+        static func defaultValue(in d: ViewDimensions) -> CGFloat {
+            return d[HorizontalAlignment.center]
+        }
+    }
+    
+    static let myHorizontalAlignment = HorizontalAlignment(MyHorizontalAlignment.self)
+}
+
+private extension Alignment {
+    static let myAlignment = Alignment(horizontal: .myHorizontalAlignment, vertical: .myVerticalAlignment)
+}
+
 extension View {
     func foreground<Overlay: View>(_ overlay: Overlay) -> some View {
         _CustomForeground(overlay: overlay, for: self)
@@ -208,25 +186,6 @@ struct _CustomForeground<Content: View, Overlay: View>: View {
     }
 }
 
-struct SelectedItemPreferencesModifier: View {
-    var body: some View {
-        GeometryReader { geometry in
-            Color.clear
-                .preference(key: WidthPreferenceKey.self, value: geometry.size.width)
-                .preference(key: HeightPreferenceKey.self, value: geometry.size.height)
-        }
-    }
-}
-
-struct NotSelectedItemPreferencesModifier: View {
-    var body: some View {
-        GeometryReader { geometry in
-            Color.clear
-                .preference(key: WidthPreferenceKey.self, value: geometry.size.width)
-        }
-    }
-}
-
 extension View {
     func Print(_ vars: Any...) -> some View {
         for v in vars { print(v) }
@@ -236,14 +195,9 @@ extension View {
 
 struct SegmentedControllView_Previews: PreviewProvider {
     static var previews: some View {
-//        ScrollView(.vertical) {
-//            SegmentedControllView()
-//        }
-        VStack {
-//            GradientText()
-//            SegmentedControllView(value: <#Binding<Int>#>)
+        ZStack {
+            EmptyView()
+//            MovieView(movie: MovieDTOFactory.make()).frame(width: 100, height: 250)
         }
-
     }
 }
-

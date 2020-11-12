@@ -34,7 +34,7 @@ struct MoviesView: View {
                     .padding(EdgeInsets(top: 5, leading: 20, bottom: 5, trailing: 20))
                 Divider()
                 HStack {
-                    SegmentedControllView(value: $viewModel.selectedSegmentedControlerItem)
+                    SegmentedControlView(value: $viewModel.selectedSegmentedControlerItem)
                     Spacer()
                 }
                 .padding(EdgeInsets(top: 5, leading: 20, bottom: 5, trailing: 20))
