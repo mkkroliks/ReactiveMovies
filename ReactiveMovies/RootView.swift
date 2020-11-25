@@ -12,15 +12,15 @@ struct RootView: View {
     var body: some View {
         TabView {
             MoviesView()
-            .tabItem {
-                Image(systemName: "film")
-                Text("Movies")
-            }.tag(0)
+                .tabItem {
+                    Image(systemName: "film")
+                    Text("Movies")
+                }.tag(0)
         }
     }
 }
 
-struct TabbarView_Previews: PreviewProvider {
+struct RootView_Previews: PreviewProvider {
     static var previews: some View {
         RootView()
     }

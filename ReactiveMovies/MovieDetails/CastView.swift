@@ -79,7 +79,6 @@ struct CastsView: View {
     private func getProperElementFrame(reader: GeometryProxy) -> CGRect {
         let elementWidth  = (reader.size.width - (CGFloat(elementsOnScreen - 1) * spacing)) / (CGFloat(elementsOnScreen) - 0.5)
         let elementHeight = reader.size.height - padding.top - padding.bottom
-//        print("elementWidth \(elementWidth), height \(elementHeight)")
         return CGRect(x: 0, y: 0, width: elementWidth, height: elementHeight)
     }
 }

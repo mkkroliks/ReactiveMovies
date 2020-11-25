@@ -12,7 +12,7 @@ struct SegmentedControlView: View {
 
     @State private var selectedIndex: Int = 0 {
         didSet {
-            wer.wrappedValue = selectedIndex
+            selectedItemIndex.wrappedValue = selectedIndex
         }
     }
 
@@ -27,10 +27,10 @@ struct SegmentedControlView: View {
     let gradient1: [UIColor] = [.black, .black]
     let gradient2: [UIColor] = [UIColor(named: "SegmentedControlGradientStart")!, UIColor(named: "SegmentedControlGradientEnd")!]
     
-    var wer: Binding<Int>
+    var selectedItemIndex: Binding<Int>
     
     init(value: Binding<Int>) {
-        self.wer = value
+        self.selectedItemIndex = value
     }
 
     var body: some View {
@@ -56,8 +56,8 @@ struct SegmentedControlView: View {
         .overlay(RoundedRectangle(cornerRadius: height / 2, style: .circular).stroke(lineWidth: 1))
     }
 
+    @ViewBuilder
     func createTextView(for index: Int) -> some View {
-        Group {
             if index == self.selectedIndex {
                 Text(categories[index])
                     .padding(EdgeInsets(top: 8, leading: 12, bottom: 8, trailing: 12))
@@ -96,7 +96,6 @@ struct SegmentedControlView: View {
                     })
             }
         }
-    }
 }
 
 struct SelectedItemPreferencesModifier: View {

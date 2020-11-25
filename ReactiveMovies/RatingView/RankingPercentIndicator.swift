@@ -9,23 +9,24 @@
 import SwiftUI
 
 struct RankingPercentIndicator: AnimatableModifier {
-    var percent: CGFloat?
+    var percent: Float?
     var color: Color
-    
-    var animatableData: CGFloat {
+
+    var animatableData: Float {
         get { percent ?? 0 }
         set { percent = newValue }
     }
-    
+
+
     func body(content: Content) -> some View {
         content
             .overlay(PercentLabel(percent: percent).foregroundColor(.red))
             .overlay(PercentLine(percent: percent, color: color))
     }
-    
+
     struct PercentLabel: View {
-        var percent: CGFloat?
-        
+        var percent: Float?
+
         var body: some View {
             ZStack {
                 if percent != nil {
@@ -44,13 +45,13 @@ struct RankingPercentIndicator: AnimatableModifier {
             }
         }
     }
-    
+
     struct PercentLine: View {
-        var percent: CGFloat?
+        var percent: Float?
         var color: Color
         var body: some View {
             Circle()
-                .trim(from: 0, to: (percent ?? 0) / 100)
+                .trim(from: 0, to: CGFloat( (percent ?? 0) / 100))
                 .stroke(style: StrokeStyle(lineWidth: 3, lineCap: .round, lineJoin: .round))
                 .rotationEffect(.init(degrees: -90))
                 .foregroundColor(color)

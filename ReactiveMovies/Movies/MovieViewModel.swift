@@ -10,7 +10,7 @@ import SwiftUI
 import Combine
 
 class MovieViewModel: ObservableObject, Identifiable {
-    @State var height: CGFloat = 170
+    @State var height: CGFloat = 250
     @ObservedObject var imageLoader: AsynchronousImageLoader
     
     var movie: MovieDTO

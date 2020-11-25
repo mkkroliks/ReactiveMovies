@@ -135,26 +135,6 @@ struct APIService {
         task.resume()
     }
     
-    private func createURLRequest(endpoint: Endpoint, params: [String: String]? = nil) throws -> URLRequest {
-        let queryURL = baseURL.appendingPathComponent(endpoint.path)
-        guard var urlComponents = URLComponents(url: queryURL, resolvingAgainstBaseURL: true) else {
-            throw APIError.urlComponentsCreation
-        }
-        urlComponents.queryItems = [
-            URLQueryItem(name: "api_key", value: key)
-        ]
-        if let params = params {
-            for (_, value) in params.enumerated() {
-                urlComponents.queryItems?.append(URLQueryItem(name: value.key, value: value.value))
-            }
-        }
-        guard let url = urlComponents.url else {
-            throw APIError.urlComponentURLCreation
-        }
-
-        return URLRequest(url: url)
-    }
-    
     func get<DTO: Codable>(endpoint: Endpoint, params: [String: String]? = nil) -> AnyPublisher<DTO, APIError> {
         do {
             let urlRequest = try createURLRequest(endpoint: endpoint, params: params)
@@ -185,5 +165,25 @@ struct APIService {
                 return Fail(error: APIError.error(reason: error.localizedDescription)).eraseToAnyPublisher()
             }
         }
+    }
+    
+    private func createURLRequest(endpoint: Endpoint, params: [String: String]? = nil) throws -> URLRequest {
+        let queryURL = baseURL.appendingPathComponent(endpoint.path)
+        guard var urlComponents = URLComponents(url: queryURL, resolvingAgainstBaseURL: true) else {
+            throw APIError.urlComponentsCreation
+        }
+        urlComponents.queryItems = [
+            URLQueryItem(name: "api_key", value: key)
+        ]
+        if let params = params {
+            for (_, value) in params.enumerated() {
+                urlComponents.queryItems?.append(URLQueryItem(name: value.key, value: value.value))
+            }
+        }
+        guard let url = urlComponents.url else {
+            throw APIError.urlComponentURLCreation
+        }
+
+        return URLRequest(url: url)
     }
 }

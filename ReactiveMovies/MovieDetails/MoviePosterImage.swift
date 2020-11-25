@@ -23,18 +23,10 @@ struct MoviePosterImageResizable: View {
     struct MoviePosterModifier: AnimatableModifier {
         var pct: CGFloat
         var frame: CGRect
-                        
-        var animatableData: AnimatablePair<CGFloat, CGRect.AnimatableData> {
-            get { AnimatablePair(pct, frame.animatableData) }
-            set {
-                pct = newValue.first
-                frame = CGRect(
-                    x: newValue.second.first.first,
-                    y: newValue.second.first.second,
-                    width: newValue.second.second.first,
-                    height: newValue.second.second.second
-                )
-            }
+
+        var animatableData: CGFloat {
+            get { pct }
+            set { pct = newValue }
         }
         
         func body(content: Content) -> some View {
@@ -48,9 +40,8 @@ struct MoviePosterImageResizable: View {
         }
     }
     
-    
     var body: some View {
-        HStack {
+        Group {
             if let image = imageLoader.image {
                 Image(uiImage: image)
                     .resizable()
@@ -63,7 +54,6 @@ struct MoviePosterImageResizable: View {
         .modifier(MoviePosterModifier(pct: CGFloat(pct), frame: frame))
     }
 }
-
 
 struct MoviePosterImage: View {
     @ObservedObject var imageLoader: AsynchronousImageLoader
