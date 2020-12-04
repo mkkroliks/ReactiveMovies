@@ -1,7 +1,7 @@
-![](DemoApp.gif)
+![](ReactiveMovies.gif)
 
 # ReactiveMovies
-Demo app built with SwiftUI + Combine framework. 
+Demo app built in SwiftUI + Combine framework. 
 
 ## Topics covered
 
