@@ -45,7 +45,7 @@ struct RatingView: View {
             }
             let finalPercent = percent
             percent = 0
-            withAnimation(.easeInOut(duration: 5.0)) {
+            withAnimation(.easeInOut(duration: 2.0)) {
                 self.percent = finalPercent
             }
         }
