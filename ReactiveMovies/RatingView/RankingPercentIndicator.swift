@@ -17,7 +17,6 @@ struct RankingPercentIndicator: AnimatableModifier {
         set { percent = newValue }
     }
 
-
     func body(content: Content) -> some View {
         content
             .overlay(PercentLabel(percent: percent).foregroundColor(.red))
@@ -28,10 +27,10 @@ struct RankingPercentIndicator: AnimatableModifier {
         var percent: Float?
 
         var body: some View {
-            ZStack {
-                if percent != nil {
+            Group {
+                if let percent = percent {
                     HStack(alignment: .top) {
-                        Text("\(Int(percent!))")
+                        Text("\(Int(percent))")
                             .font(.system(size: 14)).bold()
                             .foregroundColor(.white)
                             .padding(.leading, 2)
@@ -40,7 +39,7 @@ struct RankingPercentIndicator: AnimatableModifier {
                             .padding(EdgeInsets(top: 2, leading: -8, bottom: 0, trailing: 0))
                     }
                 } else {
-                    Text("\(Int(percent!))").font(.system(size: 14)).foregroundColor(.white)
+                    EmptyView()
                 }
             }
         }

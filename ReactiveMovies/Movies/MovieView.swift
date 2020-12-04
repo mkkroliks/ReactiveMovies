@@ -49,7 +49,7 @@ struct MovieView: View {
             .cornerRadius(10)
             .shadow(color: Color.gray.opacity(0.3), radius: 6)
             
-            RatingView(percentToShow: viewModel.movie.voteAverage * 10, animate: false)
+            RatingView(percent: viewModel.movie.voteAverage * 10, animate: false)
                 .alignmentGuide(.ratingAndPosterHorizontalAlignment) { dimension in
                     dimension[.leading]
                 }

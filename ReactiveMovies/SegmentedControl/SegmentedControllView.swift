@@ -67,8 +67,8 @@ struct SegmentedControlView: View {
                     .alignmentGuide(Alignment.myAlignment.horizontal) { d in d[HorizontalAlignment.center] }
                     .background(GeometryReader { geometry in
                         Color.clear
-                            .preference(key: WidthPreferenceKey.self, value: geometry.size.width)
-                            .preference(key: HeightPreferenceKey.self, value: geometry.size.height)
+                            .itemWidth(width: geometry.size.width)
+                            .itemHeight(height: geometry.size.height)
                     })
                     .onPreferenceChange(WidthPreferenceKey.self, perform: {
                         self.w[index] = $0
@@ -83,8 +83,7 @@ struct SegmentedControlView: View {
                     .foreground(Color.clear.modifier(AnimatableGradient(from: gradient1, to: gradient2, pct: 0)))
                     .foregroundColor(Color.black)
                     .background(GeometryReader { geometry in
-                        Color.clear
-                            .preference(key: WidthPreferenceKey.self, value: geometry.size.width)
+                        Color.clear.itemWidth(width: geometry.size.width)
                     })
                     .onTapGesture {
                         withAnimation(.easeIn(duration: 0.3)) {
@@ -96,6 +95,16 @@ struct SegmentedControlView: View {
                     })
             }
         }
+}
+
+private extension View {
+    func itemWidth(width: CGFloat) -> some View {
+        preference(key: WidthPreferenceKey.self, value: width)
+    }
+    
+    func itemHeight(height: CGFloat) -> some View {
+        preference(key: HeightPreferenceKey.self, value: height)
+    }
 }
 
 struct SelectedItemPreferencesModifier: View {

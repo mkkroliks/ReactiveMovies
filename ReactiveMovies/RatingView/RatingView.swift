@@ -9,14 +9,9 @@
 import SwiftUI
 
 struct RatingView: View {
-    @State private var percent: Float? = 0
-    
-    var percentToShow: Float? = 0
-    
+    @State var percent: Float
+
     var color: Color {
-        guard let percent = percent else {
-            return .gray
-        }
         if percent > 70 {
             return .green
         } else if percent > 50 {
@@ -25,9 +20,9 @@ struct RatingView: View {
             return .red
         }
     }
-    
+
     var animate: Bool = true
-    
+
     var body: some View {
         ZStack {
             Circle()
@@ -41,24 +36,24 @@ struct RatingView: View {
                     .opacity(0.3)
                     .foregroundColor(.black)
                     .modifier(RankingPercentIndicator(percent: percent, color: color))
-//                    .overlay(PercentLabel1(percent: percent).foregroundColor(.red))
-//                    .overlay(PercentLine1(percent: percent, color: color))
             }.padding(EdgeInsets(top: 3, leading: 3, bottom: 3, trailing: 3))
         }
         .frame(width:40, height: 40)
         .onAppear {
-            withAnimation(animate ? .easeInOut(duration: 5.0) : nil) {
-                guard let percent = self.percentToShow else {
-                    return
-                }
-                self.percent = percent
+            guard animate else {
+                return
+            }
+            let finalPercent = percent
+            percent = 0
+            withAnimation(.easeInOut(duration: 5.0)) {
+                self.percent = finalPercent
             }
         }
     }
 }
 
-struct RatingView1_Previews: PreviewProvider {
+struct RatingView_Previews: PreviewProvider {
     static var previews: some View {
-        RatingView(percentToShow: 96)
+        RatingView(percent: 91)
     }
 }

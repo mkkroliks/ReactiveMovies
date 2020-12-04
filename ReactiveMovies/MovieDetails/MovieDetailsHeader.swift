@@ -125,7 +125,7 @@ struct MovieDetailsHeader: View {
                                 .foregroundColor(.white)
                                 .font(Font.caption)
                             HStack {
-                                RatingView(percentToShow: viewModel.movie.voteAverage * 10)
+                                RatingView(percent: viewModel.movie.voteAverage * 10)
                                 Text("Users\nScore")
                                     .foregroundColor(.white)
                                     .font(Font.caption.bold())
